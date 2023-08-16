@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Candlestick Chart</title>
+</head>
+<body>
+<h1>Candlestick Chart:</h1>
+<div th:each="data : ${candlestickData}">
+    <!--//<p>Date: <span th:text="${data.date}"></span></p>-->
+    <img th:src="@{'data:image/png;base64,' + ${data.chart}}" alt="Candlestick Chart" />
+</div>
+</body>
+</html>
