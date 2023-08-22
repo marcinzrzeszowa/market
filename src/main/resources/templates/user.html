@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: headerCss">
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+<div class="content">
+    <div class="contentLeft">
+    <form method="POST" th:object="${user}">
+        <fieldset>
+            <label>Nazwa użytkownika
+                <input type="text" th:field="*{username}"/>
+            </label>
+            <label>
+                <input type="hidden" th:field="*{password}"/>
+            </label>
+            <label>Email
+                <input type="text" th:field="*{email}"/>
+            </label>
+            <input type="submit" th:action="@{'/user/{id}' (id=${user.getId()})}" th:value="Zapisz"  />
+        </fieldset>
+    </form>
+    </div>
+</div>
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/header :: headerCss">
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+    <div  th:class="content">
+            <form  th:object="${articleForm}"  th:method="POST">
+                <fieldset>
+                    <label>Tytuł</label>
+                    <textarea type="text" th:field="*{shortDescription}" title="Opis" autofocus="true" rows="5" />
+                    <label>Treść artykułu</label>
+                    <textarea type="text" th:field="*{description}"  autofocus="false" rows="40" />
+
+                    <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}" th:class="error" />
+                    <input sec:authorize="hasRole('ADMIN')" th:if="${action} == 'editArticle'"  type="submit" th:action="@{/articles/edit/{id}}" th:value="Zapisz"  />
+                    <input sec:authorize="hasRole('ADMIN')" th:if="${action} == 'newArticle'"  type="submit" th:action="@{/articles/new}" th:value="Dodaj"  />
+                    <a th:href="@{/home}">wróć</a>
+                </fieldset>
+            </form>
+        </div>
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+
+</html>

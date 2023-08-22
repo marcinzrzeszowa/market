@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/header :: headerCss">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div th:class="content">
+    <form method="post" th:object="${alertForm}">
+        <fieldset>
+            <label>Symbol kursu
+                <select th:field="*{ticker}" name="ticker">
+                    <option th:each="obj: ${tickers}"
+                            th:value="${obj.getId()}"
+                            th:text="${obj.getName()}">
+                    </option>
+                </select>
+                <p th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}"></p>
+            </label>
+            <label>Opis
+                <input type="text" th:field="*{description}" name="description"/>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="error"></p>
+            </label>
+            <!--th:text="${#numbers.formatDecimal(param.amount, 1,'COMMA', 3, 'COMMA')}"-->
+            <label>Cena maksymalna
+                <input type="number" step="0.001" th:field="*{maxPrice}" name="maxPrice" placeholder="Górny zekres ceny"/>
+                <p th:if="${#fields.hasErrors('maxPrice')}" th:errors="*{maxPrice}" placeholder="" th:class="error"></p>
+            </label>
+            <label>Cena minimalna
+                <input type="number" step="0.001" th:field="*{minPrice}" name="minPrice" placeholder="Dolny zekres ceny" />
+                <p th:if="${#fields.hasErrors('minPrice')}" th:errors="*{minPrice}" th:class="error"></p>
+            </label>
+            <label>Alert aktywny
+                <input  type="checkbox" th:field="*{Active}" name="isActive" placeholder="boolean" th:class="error"/>
+            </label>
+                <input  type="hidden" th:field="*{user}" name="user"/>
+                <p th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></p>
+            <br>
+            <input type="submit" th:action="@{/alerts/new}"  th:value="Dodaj" />
+            <a href="/alerts"/>Wstecz</a>
+        </fieldset>
+    </form>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

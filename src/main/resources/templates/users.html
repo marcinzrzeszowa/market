@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/header :: headerCss">
+</head>
+
+<body>
+
+        <div th:replace="fragments/header :: header"></div>
+        <div th:class="content">
+            <div class="articleShort">
+
+                <h4>Użytkowicy</h4>
+                <br/>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/register}">Dodaj Użytkownika</a>
+                <br/>
+
+            <div class="contentLeft">
+            <ul  th:each="user: ${usersList}">
+                <il>
+                    <label  th:text="${user.getUsername()}" />
+                    <a th:href="@{'/user/{id}'(id=${user.getId()})}">Edytuj</a>
+                    <a th:href="@{'/user/delete/{id}'(id=${user.getId()})}">Usuń</a>
+                </il>
+            </ul>
+                </br>
+            </div>
+            </div>
+        </div>
+            <div th:replace="fragments/footer :: footer"></div>
+    </div>
+
+</body>
+</html>

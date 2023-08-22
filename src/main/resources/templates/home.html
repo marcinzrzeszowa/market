@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/header :: headerCss">
+</head>
+<body>
+
+
+<div th:replace="fragments/header :: header"></div>
+<div th:class="content">
+  <div th:each="article: ${articles}" class="content">
+    <div class="articleShort">
+      </br>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{'/articles/new'}" >Dodaj Artykuł</a>
+      </br>
+      <p  th:utext="${article.getShortDescription}" style="font-style: italic;" />
+      <p th:text="${article.getLocalDate}"></p><a th:href="@{'/articles/{id}'(id=${article.getId()})}" id="morelink">Przeczytaj</a>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{'/articles/edit/{id}'(id=${article.getId()})}">Edytuj</a>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{'/articles/delete/{id}'(id=${article.getId()})}" id="delete" name="delete" th:method="delete">Usuń</a>
+    </div>
+  </div>
+  </br>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

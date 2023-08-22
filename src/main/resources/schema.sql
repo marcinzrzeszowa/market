@@ -1,4 +1,0 @@
-CREATE TABLE Symbol(
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    symbol VARCHAR(100)
-);

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/header :: headerCss">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+    <div  th:class="content">
+        <h4>Logowanie</h4>
+        <div>
+            <div>
+                <form autocomplete="off" th:action="@{/login}"  method="POST">
+                    <fieldset>
+                        <div>
+                            <input type="text" name="username" placeholder="Login" id="username" required="true" autofocus="true"/>
+                        </div>
+                        <div>
+                            <input type="password" name="password" placeholder="Hasło" id="password" required="true" />
+                        </div>
+                        <div th:if="${param.error}">
+                            <p th:class="error" th:text="*{error}" />
+                        </div>
+                        <div>
+                            <label >Zapamiętaj dane logowania </label>
+                            <input type="checkbox" name="remember-me" id="remember-me" />
+                        </div>
+                        <div class="row">
+                            <div>
+                                <input type="submit" value="Zaloguj"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

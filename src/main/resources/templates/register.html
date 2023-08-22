@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: headerCss">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="content">
+    <form autocomplete="off" th:object="${userForm}" method="POST">
+        <fieldset>
+            <h1 text="Rejestracja użytkownika"></h1>
+            <label text="Imię">login
+                <input type="text" th:field="*{username}" title="username" autofocus="true"/>
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" th:class="error"></p>
+            </label>
+            <label text="Hasło">Hasło
+                <input type="password" th:field="*{password}" title="password" required/>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:class="error"></p>
+            </label>
+            <label text="Email">Email
+                <input type="text" th:field="*{email}" title="email" required/>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:class="error"></p>
+            </label>
+            <input type="submit" th:value="Rejestruj" th:action="@{/register}"/>
+        </fieldset>
+    </form>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+
+</html>

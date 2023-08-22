@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/header :: headerCss">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div th:class="content">
+
+    <form method="post" th:object="${alertForm}">
+        <fieldset>
+            <label>Symbol kursu
+                <select th:field="*{ticker}">
+                    <option th:value="*{ticker}" th:text="*{ticker.getName()}" selected></option>
+                        <option th:each="obj: ${tickers}"
+                                th:value="${obj.getId()}"
+                                th:text="${obj.getName()}">
+                        </option>
+                </select>
+            </label>
+            <label>Opis
+                <input type="text" th:field="*{description}"/>
+            </label>
+            <label>Cena maksymalna
+                <input type="number" th:text="${#numbers.formatDecimal(param.amount, 1,'COMMA', 3, 'COMMA')}" th:field="*{maxPrice}" />
+            </label>
+            <label>Cena minimalna
+                <input type="number" th:text="${#numbers.formatDecimal(param.amount, 1,'COMMA', 3, 'COMMA')}" th:field="*{minPrice}"/>
+            </label>
+            <label>Alert aktywny
+                <input  type="checkbox" th:field="*{Active}"/>
+            </label>
+            <br>
+            <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}" th:class="error" />
+            <input type="submit" th:action="@{/alerts/edit/{id}}" th:value="Zapisz"  />
+            <a href="/alerts"/>Wstecz</a>
+        </fieldset>
+    </form>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

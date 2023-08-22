@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head th:fragment="headerCss">
+    <title>Project Area-Strona poświęcona tematyce programowania</title>
+    <meta charset="UTF-8">
+    <meta name = "keywords" content = "Java, programowanie, projekty" />
+    <meta name = "description" content = "Strona poświęcona tematyce programowania" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div th:fragment="header"  class="headerMenu" >
+    <div th:class="contentCenter">
+    <nav class="menu-container">
+        <!-- burger menu -->
+        <input type="checkbox" aria-label="Toggle menu" />
+        <span></span>
+        <span></span>
+        <span></span>
+        <a th:href="@{/home}" class="menu-logo">
+            <img th:src="@{/css/logo100w.png}" />
+        </a>
+        <div class="menu">
+            <ul>
+                <li>
+            </li>
+                <li>
+                    <a th:href="@{/home}">Start</a>
+                </li>
+                <li>
+                    <a th:href="@{/stocks}">Notowania giełdowe</a>
+                </li>
+                <li>
+                    <a th:href="@{/alerts}"  sec:authorize="isAuthenticated()">Alerty</a>
+                </li>
+                <li>
+                    <a th:href="@{/users}" sec:authorize="hasRole('ADMIN')" th:text="Użytkownicy" />
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <div th:class="AuthMenu">
+                        <div sec:authorize="isAuthenticated()" sec:authentication="name"> </div>
+                    <a th:href="@{/logout}"  sec:authorize="isAuthenticated()" th:text="Wyloguj" />
+                    <a th:href="@{/login}"  sec:authorize="isAnonymous()" th:text="Logowanie" />
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    </div>
+</div>
+</body>
+</html>
