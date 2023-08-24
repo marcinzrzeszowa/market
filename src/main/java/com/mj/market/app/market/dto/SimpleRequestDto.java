@@ -17,6 +17,6 @@ public class SimpleRequestDto implements RequestObject {
 
     @Override
     public String toString() {
-        return "SymbolDto{symbol=" + symbol + ", price=" + price +"}" ;
+        return "SimpleRequestDto{symbol=" + symbol + ", price=" + price +"}" ;
     }
 }

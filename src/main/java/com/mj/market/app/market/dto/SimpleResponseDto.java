@@ -14,6 +14,6 @@ public class SimpleResponseDto implements ResponseObject{
 
     @Override
     public String toString() {
-        return "SymbolDto{symbol=" + symbol + ", price=" + price +"}" ;
+        return "SimpleResponseDto{symbol=" + symbol + ", price=" + price +"}" ;
     }
 }

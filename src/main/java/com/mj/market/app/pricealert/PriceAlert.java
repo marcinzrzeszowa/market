@@ -49,7 +49,7 @@ public class PriceAlert {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "price_alerts")
+    @JoinColumn(name = "symbol")
     private Symbol symbol;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -59,7 +59,7 @@ public class PriceAlert {
     public PriceAlert() {
     }
 
-    private PriceAlert(Symbol ticker, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isActive, Boolean isToNotify, Boolean isRelated, Long notifyAlertId) {
+    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isActive, Boolean isToNotify, Boolean isRelated, Long notifyAlertId) {
         this.description = description;
         this.maxPrice = maxPrice;
         this.minPrice = minPrice;
@@ -67,56 +67,56 @@ public class PriceAlert {
         this.isRelated = isRelated;
         this.isToNotify = isToNotify;
         this.notifyAlertId = notifyAlertId;
-        this.symbol = ticker;
+        this.symbol = symbol;
         this.user = user;
     }
 
     // PA
-    private PriceAlert(Symbol ticker, User user, String description, BigDecimal maxPrice, BigDecimal minPrice) {
-        this(ticker, user, description, maxPrice, minPrice, true, true, false, Long.valueOf(-1));
+    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice) {
+        this(symbol, user, description, maxPrice, minPrice, true, true, false, Long.valueOf(-1));
     }
-    public static PriceAlert newObj(Symbol ticker, User user, String description, BigDecimal maxPrice, BigDecimal minPrice){
-        return new PriceAlert(ticker,user, description, maxPrice,  minPrice);
+    public static PriceAlert newObj(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice){
+        return new PriceAlert(symbol,user, description, maxPrice,  minPrice);
     }
 
     // PA. Just price MAX
-    private PriceAlert(Symbol ticker, User user, String description, BigDecimal maxPrice) {
-        this(ticker, user, description, maxPrice, BigDecimal.ZERO, true, true, false, Long.valueOf(-1));
+    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice) {
+        this(symbol, user, description, maxPrice, BigDecimal.ZERO, true, true, false, Long.valueOf(-1));
     }
-    public static PriceAlert newObjJustMaxPrice(Symbol ticker, User user, String description, BigDecimal maxPrice){
-        return new PriceAlert(ticker,user, description, maxPrice, maxPrice);
+    public static PriceAlert newObjJustMaxPrice(Symbol symbol, User user, String description, BigDecimal maxPrice){
+        return new PriceAlert(symbol,user, description, maxPrice, maxPrice);
     }
 
     // PA . Just price MIN
-    private PriceAlert(Symbol ticker, User user, BigDecimal minPrice, String description) {
-        this(ticker, user, description, BigDecimal.ZERO, minPrice, true, true, false, Long.valueOf(-1));
+    private PriceAlert(Symbol symbol, User user, BigDecimal minPrice, String description) {
+        this(symbol, user, description, BigDecimal.ZERO, minPrice, true, true, false, Long.valueOf(-1));
     }
-    public static PriceAlert newObjJustMinPrice(Symbol ticker, User user, BigDecimal minPrice, String description){
-        return new PriceAlert(ticker,user, minPrice, description);
+    public static PriceAlert newObjJustMinPrice(Symbol symbol, User user, BigDecimal minPrice, String description){
+        return new PriceAlert(symbol,user, minPrice, description);
     }
 
     // PA With relation
-    private PriceAlert(Symbol ticker, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        this(ticker, user, description, maxPrice, minPrice, true, isToNotify, isRelated, notifyAlertId);
+    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
+        this(symbol, user, description, maxPrice, minPrice, true, isToNotify, isRelated, notifyAlertId);
     }
-    public static PriceAlert newObjRelated(Symbol ticker, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        return new PriceAlert(ticker, user, description, maxPrice, minPrice, isToNotify, isRelated, notifyAlertId);
+    public static PriceAlert newObjRelated(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
+        return new PriceAlert(symbol, user, description, maxPrice, minPrice, isToNotify, isRelated, notifyAlertId);
     }
 
     // PA With relation. Just price MAX
-    private PriceAlert(Symbol ticker, User user, String description, BigDecimal maxPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        this(ticker, user, description, maxPrice, BigDecimal.ZERO, true, isToNotify, isRelated, notifyAlertId);
+    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
+        this(symbol, user, description, maxPrice, BigDecimal.ZERO, true, isToNotify, isRelated, notifyAlertId);
     }
-    public static PriceAlert newObjRelatedJustMaxPrice(Symbol ticker, User user, String description, BigDecimal maxPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        return new PriceAlert(ticker, user, description, maxPrice, isToNotify, isRelated, notifyAlertId);
+    public static PriceAlert newObjRelatedJustMaxPrice(Symbol symbol, User user, String description, BigDecimal maxPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
+        return new PriceAlert(symbol, user, description, maxPrice, isToNotify, isRelated, notifyAlertId);
     }
 
     // PA With relation. Just price MIN
-    private PriceAlert(Symbol ticker, User user, BigDecimal minPrice, String description, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        this(ticker, user, description, BigDecimal.ZERO, minPrice, true, isToNotify, isRelated, notifyAlertId);
+    private PriceAlert(Symbol symbol, User user, BigDecimal minPrice, String description, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
+        this(symbol, user, description, BigDecimal.ZERO, minPrice, true, isToNotify, isRelated, notifyAlertId);
     }
-    public static PriceAlert newObjRelatedJustMinPrice(Symbol ticker, User user, BigDecimal minPrice, String description, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        return new PriceAlert(ticker, user, minPrice, description, isToNotify, isRelated, notifyAlertId);
+    public static PriceAlert newObjRelatedJustMinPrice(Symbol symbol, User user, BigDecimal minPrice, String description, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
+        return new PriceAlert(symbol, user, minPrice, description, isToNotify, isRelated, notifyAlertId);
     }
 
     public Long getId() {
@@ -201,10 +201,26 @@ public class PriceAlert {
         return id.equals(that.id);
     }
 
-  /*  @Override
+    @Override
+    public String toString() {
+        return "PriceAlert{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", maxPrice=" + maxPrice +
+                ", minPrice=" + minPrice +
+                ", isActive=" + isActive +
+                ", isRelated=" + isRelated +
+                ", isToNotify=" + isToNotify +
+                ", notifyAlertId=" + notifyAlertId +
+                ", symbol=" + symbol +
+                ", user=" + user +
+                '}';
+    }
+
+    /*  @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + ticker.getId().hashCode();
+        result = 31 * result + symbol.getId().hashCode();
         return result;
     }*/
 }

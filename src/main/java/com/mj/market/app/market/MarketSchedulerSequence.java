@@ -6,6 +6,8 @@ import com.mj.market.app.pricealert.PriceAlertCache;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
+import com.mj.market.config.ColorConsole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,55 +15,67 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public abstract class MarketSchedulerSequence {
-
+    protected final String name;
     protected Set<SymbolType> supportedSymbolType;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
-    private static Set<Symbol> filteredSymbols = new HashSet<>();
-    private static DataAnalysis dataAnalysis = new DataAnalysis();
-    private final PriceAlertCache priceAlertCache;
-    private static List<PriceAlert> priceAlerts = new LinkedList<>();
-    private static List<PriceAlert> priceAlertsToNotify = new LinkedList<>();
-    private static List<SimpleResponseDto> simpleResponseDto = new LinkedList<>();
+    private Set<Symbol> filteredSymbols;
+    private static PriceAlertCache priceAlertCache;
+    private static List<PriceAlert> priceAlerts;
+    private List<PriceAlert> priceAlertsToNotify;
+    private List<SimpleResponseDto> simpleResponseDto = new LinkedList<>();
 
-
+    private static DataAnalysis dataAnalysis = new DataAnalysis();;
     private final EmailService emailService;
     private final SymbolService symbolService;
 
+    private static final boolean loggerEnable = false;
 
     @Autowired
-    public MarketSchedulerSequence(PriceAlertCache priceAlertCache, EmailService emailService, SymbolService symbolService, Set<SymbolType> supportedSymbolType) {
+    public MarketSchedulerSequence(String apiName, PriceAlertCache priceAlertCache, EmailService emailService, SymbolService symbolService) {
+        this.name = apiName;
         this.priceAlertCache = priceAlertCache;
         this.emailService = emailService;
         this.symbolService = symbolService;
-        this.supportedSymbolType = supportedSymbolType;
+        this.supportedSymbolType = setSupportedSymbolType();
     }
+
+    protected abstract Set<SymbolType> setSupportedSymbolType();
 
     //Template method for every Market API
     public final void startSimplePriceRequestSequence(){
 
         //Read user defined price alerts
         priceAlerts = readActiveUserAlerts();
+        if(loggerEnable)ColorConsole.printlnYellow("priceAlerts = "+ priceAlerts.toString());
 
-        //Get set of interesting Symbols from users alert list
-        selectedSymbols = readDistinctTickersFromAlertList(priceAlerts);
+        if(priceAlerts != null){
 
-        //Get just symbols valid for Market API implementation
-        filteredSymbols = getFilteredSymbols(selectedSymbols);
+            //Get set of interesting Symbols from all users alert list
+            selectedSymbols = readDistinctTickersFromAlertList(priceAlerts);
 
-        //get market symbols prices from API
-        simpleResponseDto = requestPricesForScheduler(filteredSymbols);
+            //Get symbols matching Market API implementation
+            filteredSymbols = getFilteredSymbols(selectedSymbols);
 
-        //Analise prices and delegate calculations
-        priceAlertsToNotify = marketDataAnalysis(simpleResponseDto, priceAlerts);
 
-        if(priceAlertsToNotify != null){
+            if(filteredSymbols != null){
+                //get market symbols prices from API
+                simpleResponseDto = requestPricesForScheduler(filteredSymbols);
+                if(loggerEnable)ColorConsole.printlnGreen("Response From: "+ name + " "+ simpleResponseDto.toString());
 
-            //change status active to not active
-            changePriceAlertsStatus(priceAlertsToNotify);
+                //Analise prices and delegate calculations
+                priceAlertsToNotify = marketDataAnalysis(simpleResponseDto, priceAlerts);
 
-            //notify user ba sending email
-            notifyUser(priceAlertsToNotify);
+                if(priceAlertsToNotify != null){
+
+                    //change status active to not active
+                    changePriceAlertsStatus(priceAlertsToNotify);
+
+                    //notify user ba sending email
+                    notifyUser(priceAlertsToNotify);
+                }
+            }
         }
     }
 
@@ -86,18 +100,14 @@ public abstract class MarketSchedulerSequence {
         return result;
     }
 
-
     private static List<PriceAlert> marketDataAnalysis(List<SimpleResponseDto> requestObjects, List<PriceAlert> priceAlerts) {
-       // ColorConsole.printlnYellow("readDistinctTickersFromAlertList()");
        return dataAnalysis.analyse(requestObjects, priceAlerts);
     }
 
     private static void changePriceAlertsStatus(List<PriceAlert> priceAlertsToNotify) {
-        //ColorConsole.printlnCyan("changePriceAlertsStatus()");
     }
 
     private static void notifyUser(List<PriceAlert> priceAlertsToNotify) {
-        //ColorConsole.printlnWhite("notifyUser()");
             //TODO sent email with notification
     }
 
@@ -113,5 +123,8 @@ public abstract class MarketSchedulerSequence {
         return symbolService.getSymbolsByCode(allSymbols);
     }
 
+    //TODO generic collection log console printer
+    private void logCollection(Collection collection){
+    }
 
 }

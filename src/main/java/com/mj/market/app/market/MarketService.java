@@ -17,7 +17,7 @@ public class MarketService{
    // private final MarketApi fiatMarketApi;
 
 
-    public MarketService(@Qualifier("CryptoMarketApi") MarketApi cryptoMarketApi) {
+    public MarketService(@Qualifier("BinanceMarketApi") MarketApi cryptoMarketApi) {
         this.cryptoMarketApi = cryptoMarketApi;
     }
 

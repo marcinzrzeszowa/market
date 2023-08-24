@@ -41,41 +41,37 @@ class StartupData implements CommandLineRunner {
 
     private void Load(){
 
-        Symbol st0 = new Symbol("BTC/USDT","BTCUSDT", SymbolType.KRYPTOWALUTA);
-        Symbol st1 = new Symbol("ETH/USDT","ETHUSDT", SymbolType.KRYPTOWALUTA);
-        Symbol st2 = new Symbol("BNB/USDT","BNBUSDT", SymbolType.KRYPTOWALUTA);
-        Symbol st3 = new Symbol("MATIC/USDT","MATICUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol btcUsdt = new Symbol("BTC/USDT","BTCUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol ethUsdt  = new Symbol("ETH/USDT","ETHUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol bnbUsdt = new Symbol("BNB/USDT","BNBUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol maticUsdt = new Symbol("MATIC/USDT","MATICUSDT", SymbolType.KRYPTOWALUTA);
 
-        Symbol st4 = new Symbol("EUR/PLN","EURPLN", SymbolType.WALUTA);
-        Symbol st5 = new Symbol("USD/PLN","USDPLN", SymbolType.WALUTA);
-        Symbol st6 = new Symbol("EUR/USD","EURUSD", SymbolType.WALUTA);
-        Symbol st7 = new Symbol("CHF/PLN","CHFPLN", SymbolType.WALUTA);
+        Symbol eurPln = new Symbol("EUR/PLN","EURPLN", SymbolType.WALUTA);
+        Symbol usdPln = new Symbol("USD/PLN","USDPLN", SymbolType.WALUTA);
+        Symbol eurUsd = new Symbol("EUR/USD","EURUSD", SymbolType.WALUTA);
+        Symbol chfPln = new Symbol("CHF/PLN","CHFPLN", SymbolType.WALUTA);
 
-        Symbol st8 = new Symbol("SREBRO/USD","SREBRO", SymbolType.SUROWIEC);
+        Symbol silverUsd = new Symbol("SREBRO/USD","SREBRO", SymbolType.SUROWIEC);
 
-        stockTickerRepository.saveAll(Arrays.asList(st0,st1,st2,st3,st4,st5,st6,st7,st8));
-   /*
+        stockTickerRepository.saveAll(Arrays.asList(btcUsdt,ethUsdt,bnbUsdt,maticUsdt,eurPln,usdPln,eurUsd,chfPln,silverUsd));
 
-        Symbol st9 = new Symbol("BTC-USD","BTC/USD", SymbolType.KRYPTOWALUTA);
-        Symbol st10 = new Symbol("ETH-USD","ETH/USD", SymbolType.KRYPTOWALUTA);
-        Symbol st11 = new Symbol("DOT-USD","DOT/USD", SymbolType.KRYPTOWALUTA);
-        Symbol st12 = new Symbol("TSLA","Tesla, Inc.", SymbolType.AKCJA);
-
-        stockTickerRepository.saveAll(Arrays.asList(st0,st1,st2,st3,st4,st5,st6,st7,st8,st9,st10,st11,st12));
 
         User user1 = new User("Admin", UserService.passwordEncoder().encode("123"),"ROLE_ADMIN", "marcinzbrzozowa@gmail.com");
         User user2 = new User("test", UserService.passwordEncoder().encode("test"),"ROLE_MODERATOR", "test@gmail.com");
         userRepository.save(user1);
         userRepository.save(user2);
 
-        PriceAlert pa1 = PriceAlert.newObj(st9, user1,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
-        PriceAlert pa2 = PriceAlert.newObjJustMinPrice(st9,user1,new BigDecimal(16000),"Cena BTC spadła !");
-        PriceAlert pa3 = PriceAlert.newObjJustMaxPrice(st0,user2,"Cena USD drastycznie wzrosła ! ",new BigDecimal(4.23));
-        PriceAlert pa4 = PriceAlert.newObj(st5,user2,"Złoto poza zakresem",new BigDecimal(1800), new BigDecimal(1700));
-        PriceAlert pa5 = PriceAlert.newObjJustMinPrice(st1, user1, new BigDecimal(4.63),"EUR spada");
-        PriceAlert pa6 = PriceAlert.newObj(st1, user1,"EUR poza zakresem",  new BigDecimal(4.5),  new BigDecimal(4));
 
-        priceAlertRepository.saveAll(Arrays.asList(pa1,pa2,pa3,pa4,pa5,pa6));*/
+        PriceAlert pa1 = PriceAlert.newObj(btcUsdt, user1,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
+        PriceAlert pa4 = PriceAlert.newObjJustMinPrice(ethUsdt,user1,new BigDecimal(20000),"ETH below 20.000");
+        PriceAlert pa2 = PriceAlert.newObjJustMinPrice(btcUsdt,user1,new BigDecimal(16000),"Cena BTC spadła !");
+
+        PriceAlert pa3 = PriceAlert.newObjJustMaxPrice(usdPln,user2,"Cena USD drastycznie wzrosła ! ",new BigDecimal(4.23));
+        PriceAlert pa5 = PriceAlert.newObjJustMinPrice(eurPln, user1, new BigDecimal(4.63),"EUR spada");
+        PriceAlert pa6 = PriceAlert.newObj(eurPln, user1,"EUR poza zakresem",  new BigDecimal(4.5),  new BigDecimal(4));
+
+        priceAlertRepository.saveAll(Arrays.asList(pa1,pa2,pa3,pa4,pa5,pa6));
+
     }
     //&nbsp;
     private void loadArticles(){

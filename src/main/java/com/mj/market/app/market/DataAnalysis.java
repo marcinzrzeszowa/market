@@ -3,18 +3,25 @@ package com.mj.market.app.market;
 
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import com.mj.market.app.pricealert.PriceAlert;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 public class DataAnalysis {
 
     public List<PriceAlert> analyse(List<SimpleResponseDto> requestObjects, List<PriceAlert> priceAlerts) {
-        printObjects(requestObjects);
+
+        sortPriceAlerts(priceAlerts);
+
+        calculateUreConditions(requestObjects);
         return null;
     }
 
-    private void printObjects(List<SimpleResponseDto> requestObjects){
+    private void sortPriceAlerts(List<PriceAlert> priceAlerts) {
+
+
+    }
+
+    private void calculateUreConditions(List<SimpleResponseDto> requestObjects){
         for (SimpleResponseDto e: requestObjects){
             System.out.println(e.toString());
         }

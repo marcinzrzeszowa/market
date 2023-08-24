@@ -10,7 +10,6 @@ import com.mj.market.app.pricealert.PriceAlertCache;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -19,12 +18,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Component
 @Qualifier("BinanceMarketApi")
 public class BinanceMarketApi extends MarketSchedulerSequence implements MarketApi {
     private RestTemplate restTemplate = new RestTemplate();
-
+    private static final EnumSet<SymbolType> handledSymbols = EnumSet.of(SymbolType.KRYPTOWALUTA);
 
     //API URLs
     private static final String URL_API = "https://api.binance.com/api/v3";
@@ -36,9 +35,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     private final static String END_TIME = "&endTime=";
 
     public BinanceMarketApi(PriceAlertCache priceAlertCache, EmailService emailService, SymbolService symbolService) {
-        super(priceAlertCache, emailService, symbolService,
-                new HashSet<>(SymbolType.KRYPTOWALUTA.ordinal())
-                );
+        super("BinanceMarketApi", priceAlertCache, emailService, symbolService);
     }
 
     @Override
@@ -55,7 +52,6 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         return ObjectMapper.mapToSimpleResponseDtoList(objArray);
     }
 
-
     @Override
     public List<ResponseDto> getDetailPriceHistory(String symbol, Interval interval, LocalDateTime startDate, LocalDateTime endDate, int limit){
         if(symbol == null) throw new IllegalArgumentException();
@@ -67,13 +63,17 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         return ObjectMapper.mapToResponseDtoList(str2dArray);
     }
 
-
     @Override
     protected List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> symbols) {
         Set<String> set = symbols.stream()
                 .map(e -> e.getCode())
                 .collect(Collectors.toSet());
         return getPrices(set);
+    }
+
+    @Override
+    protected Set<SymbolType> setSupportedSymbolType() {
+        return handledSymbols;
     }
 
     private String buildSymbolUrl(String symbol, Interval interval, LocalDateTime startDate, LocalDateTime endDate, int limit) {
@@ -89,7 +89,6 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
                 .append(START_TIME).append(unixStartTime)
                 .append(END_TIME).append(unixEndTime)
                 .append(LIMIT).append(limit);
-        log.info(url.toString());
         return url.toString();
     }
 
@@ -108,7 +107,6 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
             url.append("\"").append(params.get(0)).append("\"");
         }
         url.append("]");
-        //log.info(url.toString());
         return url.toString();
     }
 

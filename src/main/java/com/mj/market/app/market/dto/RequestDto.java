@@ -30,7 +30,7 @@ public class RequestDto implements RequestObject {
 
     @Override
     public String toString() {
-        return "SymbolDto{" +
+        return "RequestDto{" +
                 "openTime=" + openTime +
                 ", openPrice=" + openPrice +
                 ", highPrice=" + highPrice +

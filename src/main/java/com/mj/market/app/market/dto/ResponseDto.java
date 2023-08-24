@@ -25,7 +25,7 @@ public class ResponseDto implements ResponseObject{
 
     @Override
     public String toString() {
-        return "SymbolDto{" +
+        return "ResponseDto{" +
                 "openTime=" + openTime +
                 ", openPrice=" + openPrice +
                 ", highPrice=" + highPrice +
