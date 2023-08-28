@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface PriceAlertCache {
     List<PriceAlert> findByIsActive(boolean isActive);
+    List<PriceAlert> findAll();
 }

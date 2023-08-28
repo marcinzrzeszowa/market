@@ -1,5 +1,5 @@
 package com.mj.market.app.market;
-import com.mj.market.app.email.EmailService;
+import com.mj.market.app.dataprocessor.MarketDataProcessor;
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import com.mj.market.app.pricealert.PriceAlert;
 import com.mj.market.app.pricealert.PriceAlertCache;
@@ -17,26 +17,26 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public abstract class MarketSchedulerSequence {
-    protected final String name;
-    protected Set<SymbolType> supportedSymbolType;
+    private static MarketDataProcessor marketDataProcessor;
+    private static SymbolService symbolService;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
-    private Set<Symbol> filteredSymbols;
     private static PriceAlertCache priceAlertCache;
     private static List<PriceAlert> priceAlerts;
-    private List<PriceAlert> priceAlertsToNotify;
-    private List<SimpleResponseDto> simpleResponseDto = new LinkedList<>();
 
-    private static DataAnalysis dataAnalysis = new DataAnalysis();;
-    private final EmailService emailService;
-    private final SymbolService symbolService;
 
-    private static final boolean loggerEnable = false;
+    protected final String name;
+    protected Set<SymbolType> supportedSymbolType;
+    private Set<Symbol> filteredSymbols;
+    private Set<PriceAlert> priceAlertsToNotify;
+    private List<SimpleResponseDto> simpleResponseDto;
+
+
+    private static final boolean loggerEnable = true;
 
     @Autowired
-    public MarketSchedulerSequence(String apiName, PriceAlertCache priceAlertCache, EmailService emailService, SymbolService symbolService) {
+    public MarketSchedulerSequence(String apiName, PriceAlertCache priceAlertCache, SymbolService symbolService) {
         this.name = apiName;
         this.priceAlertCache = priceAlertCache;
-        this.emailService = emailService;
         this.symbolService = symbolService;
         this.supportedSymbolType = setSupportedSymbolType();
     }
@@ -47,6 +47,7 @@ public abstract class MarketSchedulerSequence {
     public final void startSimplePriceRequestSequence(){
 
         //Read user defined price alerts
+        //TODO Query n
         priceAlerts = readActiveUserAlerts();
         if(loggerEnable)ColorConsole.printlnYellow("priceAlerts = "+ priceAlerts.toString());
 
@@ -56,22 +57,20 @@ public abstract class MarketSchedulerSequence {
             selectedSymbols = readDistinctTickersFromAlertList(priceAlerts);
 
             //Get symbols matching Market API implementation
-            filteredSymbols = getFilteredSymbols(selectedSymbols);
+            filteredSymbols = getSymbolsByType(selectedSymbols);
+            if(loggerEnable)ColorConsole.printlnRed("filteredSymbols = "+ filteredSymbols.toString());
 
-
-            if(filteredSymbols != null){
+            if(filteredSymbols != null && !filteredSymbols.isEmpty()){
                 //get market symbols prices from API
                 simpleResponseDto = requestPricesForScheduler(filteredSymbols);
                 if(loggerEnable)ColorConsole.printlnGreen("Response From: "+ name + " "+ simpleResponseDto.toString());
 
                 //Analise prices and delegate calculations
-                priceAlertsToNotify = marketDataAnalysis(simpleResponseDto, priceAlerts);
+                if(simpleResponseDto != null)
+                    priceAlertsToNotify = marketDataAnalise(simpleResponseDto, getPriceAlertsBySymbolType(filteredSymbols));
+                    if(loggerEnable)ColorConsole.printlnPurple("To notify: " + priceAlertsToNotify.toString());
 
-                if(priceAlertsToNotify != null){
-
-                    //change status active to not active
-                    changePriceAlertsStatus(priceAlertsToNotify);
-
+                    if(priceAlertsToNotify != null){
                     //notify user ba sending email
                     notifyUser(priceAlertsToNotify);
                 }
@@ -93,21 +92,22 @@ public abstract class MarketSchedulerSequence {
     }
     protected abstract List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> marketSymbols);
 
-    private Set<Symbol> getFilteredSymbols(Set<Symbol> allSymbols){
+    private Set<Symbol> getSymbolsByType(Set<Symbol> allSymbols){
        Set<Symbol> result = allSymbols.stream()
-                .filter( e-> supportedSymbolType.contains( e.getType()))
+                .filter( e-> supportedSymbolType.contains(e.getType()))
                 .collect(Collectors.toSet());
         return result;
     }
-
-    private static List<PriceAlert> marketDataAnalysis(List<SimpleResponseDto> requestObjects, List<PriceAlert> priceAlerts) {
-       return dataAnalysis.analyse(requestObjects, priceAlerts);
+    private Set<PriceAlert> getPriceAlertsBySymbolType(Set<Symbol> allSymbols){
+        return priceAlerts.stream().filter( pa -> allSymbols.contains(pa.getSymbol())).collect(Collectors.toSet());
     }
 
-    private static void changePriceAlertsStatus(List<PriceAlert> priceAlertsToNotify) {
+    private static Set<PriceAlert> marketDataAnalise(List<SimpleResponseDto> requestObjects, Set<PriceAlert> priceAlerts) {
+        marketDataProcessor = new MarketDataProcessor(requestObjects);
+       return marketDataProcessor.performDataAnalise(priceAlerts);
     }
 
-    private static void notifyUser(List<PriceAlert> priceAlertsToNotify) {
+    private static void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
             //TODO sent email with notification
     }
 
@@ -122,9 +122,4 @@ public abstract class MarketSchedulerSequence {
     protected List<String> getSupportedSymbolCodes(Set<String> allSymbols){
         return symbolService.getSymbolsByCode(allSymbols);
     }
-
-    //TODO generic collection log console printer
-    private void logCollection(Collection collection){
-    }
-
 }

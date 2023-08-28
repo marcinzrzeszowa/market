@@ -39,7 +39,7 @@ public class User implements UserDetails {
     @NotBlank(message = "Podaj email")
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy= "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy= "user")
     private Set<PriceAlert> priceAlerts;
 
     public User() {

@@ -1,28 +1,6 @@
 package com.mj.market.app.chart;
 
-import com.mj.market.app.*;
-import com.mj.market.app.market.BinanceMarketApi;
-import com.mj.market.app.market.dto.ResponseDto;
-import com.mj.market.app.market.Interval;
-import com.mj.market.app.symbol.Symbol;
-import com.mj.market.app.symbol.SymbolType;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.XYDataset;
-
 import javax.swing.*;
-import java.awt.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 public class Chart extends JFrame {
    /* private BinanceMarketApi market = new BinanceMarketApi();

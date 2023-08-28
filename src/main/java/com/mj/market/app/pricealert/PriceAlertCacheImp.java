@@ -27,6 +27,15 @@ public class PriceAlertCacheImp implements PriceAlertCache {
         return priceAlerts;
     }
 
+    @Override
+    public List<PriceAlert> findAll() {
+        if (!isCurrentAlertList) {
+            priceAlerts = priceAlertRepository.findAll();
+            isCurrentAlertList = true;
+        }
+        return priceAlerts;
+    }
+
   /*  @Override
     public void setNotCurrentPriceAlertsList() {
         isCurrentAlertList = false;

@@ -10,14 +10,14 @@ import java.util.stream.Stream;
 
 public class ObjectMapper {
 
-    public static List<ResponseDto> mapToResponseDtoList(String[][] requestObjArray) {
+    public static List<ResponseDto> valueOfResponseDtoList(String[][] requestObjArray) {
         List<ResponseDto> result = Stream.of(requestObjArray)
-                .map(reqObj->createSymbolDto(reqObj))
+                .map(reqObj-> valueOfSymbolDto(reqObj))
                 .collect(Collectors.toList());
         return result;
     }
 
-    private static ResponseDto createSymbolDto(String[] requestObj) {
+    private static ResponseDto valueOfSymbolDto(String[] requestObj) {
         return new ResponseDto(
                 DateTime.toLocalDateTime(Long.valueOf(requestObj[0])),
                 new BigDecimal(requestObj[1]),
@@ -30,7 +30,7 @@ public class ObjectMapper {
         );
     }
 
-    public static List<SimpleResponseDto> mapToSimpleResponseDtoList(SimpleRequestDto[] requestDtoArray) {
+    public static List<SimpleResponseDto> valueOfSimpleResponseDtoList(SimpleRequestDto[] requestDtoArray) {
         List<SimpleResponseDto>responseDtoList = Arrays.asList(requestDtoArray)
                 .stream()
                 .filter(reqObj->reqObj != null)

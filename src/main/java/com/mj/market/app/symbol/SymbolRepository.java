@@ -13,7 +13,7 @@ public interface SymbolRepository extends JpaRepository<Symbol,Long> {
 
     Symbol findByCode(String code);
 
-    List<Symbol> findByType(SymbolType tickerType);
+    List<Symbol> findByType(SymbolType symbolType);
 
     List<Symbol> findAll();
 

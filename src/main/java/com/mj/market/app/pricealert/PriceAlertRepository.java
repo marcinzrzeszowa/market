@@ -11,7 +11,8 @@ import java.util.Optional;
 @Repository
 public interface PriceAlertRepository extends JpaRepository<PriceAlert, Long> {
 
-    List<PriceAlert> findByIsActive(boolean isActive);
+    @Query(nativeQuery = true, value ="select * from price_alert Where is_active= :active")
+    List<PriceAlert> findByIsActive(@Param("active") boolean isActive);
 
     @Query(nativeQuery = true, value ="select * from price_alert p left join user u ON p.user_id = u.id Where u.id = :id")
     List<PriceAlert> findByUserId(@Param("id") Long id);

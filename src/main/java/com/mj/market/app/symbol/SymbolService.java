@@ -10,13 +10,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class SymbolService {
-
     private final SymbolRepository symbolRepository;
     private static Set<String> validSymbolFormats;
 
+
+
     @Autowired
-    public SymbolService(SymbolRepository stockTickerRepository) {
-        this.symbolRepository = stockTickerRepository;
+    public SymbolService(SymbolRepository symbolRepository) {
+        this.symbolRepository = symbolRepository;
         validSymbolFormats = defineValidSymbolsFormats();
     }
 

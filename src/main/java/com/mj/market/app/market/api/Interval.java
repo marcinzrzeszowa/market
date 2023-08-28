@@ -1,4 +1,4 @@
-package com.mj.market.app.market;
+package com.mj.market.app.market.api;
 
 public enum Interval {
     FIVE_MINUTES("5m"),

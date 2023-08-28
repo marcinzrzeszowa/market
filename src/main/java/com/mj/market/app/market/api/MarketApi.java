@@ -1,8 +1,8 @@
-package com.mj.market.app.market;
+package com.mj.market.app.market.api;
 
+import com.mj.market.app.market.api.Interval;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleResponseDto;
-import com.mj.market.app.symbol.Symbol;
 
 import java.time.LocalDateTime;
 import java.util.List;

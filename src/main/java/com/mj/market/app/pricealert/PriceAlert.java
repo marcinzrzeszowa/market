@@ -7,12 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-/*
-maxPrice >=0, minPrice = nie ustawione - Alert zostanie zgłoszony po wzroście ceny powyżej wartości maxPrice
-maxPrice = nie ustawione, minPrice <=0 - Alert zostanie zgłoszony po spodku ceny poniżej wartości minPrice
-maxPrice >=0, minPrice <=0 - Alert zostanie zgłoszony po wzroście ceny powyżej wartości maxPrice lub po spodku ceny poniżej wartości minPrice
-*/
-
 @Entity(name="PriceAlert")
 @Table(name="price_alert")
 public class PriceAlert {
@@ -38,15 +32,11 @@ public class PriceAlert {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "is_related")
-    private Boolean isRelated;
+    @Column(name = "related_alert_id")
+    private Long relatedAlertId;
 
-    @Column(name = "is_to_notify")
-    private Boolean isToNotify;
-
-    @Column(name = "notify_alert_id")
-    private Long notifyAlertId;
-
+    @Column(name = "communicate")
+    private String communicate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "symbol")
@@ -56,79 +46,56 @@ public class PriceAlert {
     @JoinColumn(name = "user_id")
     private User user;
 
+
+    @Transient
+    private static final BigDecimal defaultMinPrice = BigDecimal.ZERO;
+    @Transient
+    private static final BigDecimal defaultMaxPrice = BigDecimal.ZERO;
+    @Transient
+    private static  final Long defaultNotifyAlertId = Long.valueOf(-1);
+    @Transient
+    private static final boolean defaultIsActive = true;
+    @Transient
+    private static  final String defaultCommunicate = "no communicate" ;
+
     public PriceAlert() {
     }
 
-    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isActive, Boolean isToNotify, Boolean isRelated, Long notifyAlertId) {
+    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isActive, Long relatedAlertId) {
         this.description = description;
         this.maxPrice = maxPrice;
         this.minPrice = minPrice;
         this.isActive = isActive;
-        this.isRelated = isRelated;
-        this.isToNotify = isToNotify;
-        this.notifyAlertId = notifyAlertId;
+        this.relatedAlertId = relatedAlertId;
         this.symbol = symbol;
         this.user = user;
+        this.communicate = defaultCommunicate;
     }
 
-    // PA
-    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice) {
-        this(symbol, user, description, maxPrice, minPrice, true, true, false, Long.valueOf(-1));
-    }
-    public static PriceAlert newObj(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice){
-        return new PriceAlert(symbol,user, description, maxPrice,  minPrice);
+    // Max and Min price
+    public static PriceAlert newPriceAlertWithMaxMin(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice){
+        return new PriceAlert(symbol,user, description, maxPrice, minPrice, defaultIsActive, defaultNotifyAlertId );
     }
 
-    // PA. Just price MAX
-    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice) {
-        this(symbol, user, description, maxPrice, BigDecimal.ZERO, true, true, false, Long.valueOf(-1));
-    }
-    public static PriceAlert newObjJustMaxPrice(Symbol symbol, User user, String description, BigDecimal maxPrice){
-        return new PriceAlert(symbol,user, description, maxPrice, maxPrice);
+    // just Max price
+    public static PriceAlert newPriceAlertWithMax(Symbol symbol, User user, String description, BigDecimal maxPrice){
+        return new PriceAlert(symbol,user, description, maxPrice, defaultMinPrice, defaultIsActive, defaultNotifyAlertId);
     }
 
-    // PA . Just price MIN
-    private PriceAlert(Symbol symbol, User user, BigDecimal minPrice, String description) {
-        this(symbol, user, description, BigDecimal.ZERO, minPrice, true, true, false, Long.valueOf(-1));
-    }
-    public static PriceAlert newObjJustMinPrice(Symbol symbol, User user, BigDecimal minPrice, String description){
-        return new PriceAlert(symbol,user, minPrice, description);
+    // just Min price
+    public static PriceAlert newPriceAlertWithMin(Symbol symbol, User user, String description, BigDecimal minPrice){
+        return new PriceAlert(symbol,user, description, defaultMaxPrice, minPrice, defaultIsActive, defaultNotifyAlertId);
     }
 
-    // PA With relation
-    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        this(symbol, user, description, maxPrice, minPrice, true, isToNotify, isRelated, notifyAlertId);
-    }
-    public static PriceAlert newObjRelated(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        return new PriceAlert(symbol, user, description, maxPrice, minPrice, isToNotify, isRelated, notifyAlertId);
-    }
-
-    // PA With relation. Just price MAX
-    private PriceAlert(Symbol symbol, User user, String description, BigDecimal maxPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        this(symbol, user, description, maxPrice, BigDecimal.ZERO, true, isToNotify, isRelated, notifyAlertId);
-    }
-    public static PriceAlert newObjRelatedJustMaxPrice(Symbol symbol, User user, String description, BigDecimal maxPrice, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        return new PriceAlert(symbol, user, description, maxPrice, isToNotify, isRelated, notifyAlertId);
-    }
-
-    // PA With relation. Just price MIN
-    private PriceAlert(Symbol symbol, User user, BigDecimal minPrice, String description, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        this(symbol, user, description, BigDecimal.ZERO, minPrice, true, isToNotify, isRelated, notifyAlertId);
-    }
-    public static PriceAlert newObjRelatedJustMinPrice(Symbol symbol, User user, BigDecimal minPrice, String description, Boolean isToNotify, Boolean isRelated, Long notifyAlertId){
-        return new PriceAlert(symbol, user, minPrice, description, isToNotify, isRelated, notifyAlertId);
+    //  Max and Min price with related price alert
+    public static PriceAlert newPriceAlertWithRelation(Symbol symbol, User user, String description, BigDecimal maxPrice, BigDecimal minPrice,Long relatedAlertId){
+        return new PriceAlert(symbol, user, description, maxPrice, minPrice, defaultIsActive, relatedAlertId);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Symbol getSymbol() {
-        return symbol;
-    }
-    public void setSymbol(Symbol symbol) {
-        this.symbol = symbol;
-    }
     public String getDescription() {
         return description;
     }
@@ -161,6 +128,22 @@ public class PriceAlert {
         isActive = active;
     }
 
+    public Long getRelatedAlertId() {
+        return relatedAlertId;
+    }
+
+    public void setRelatedAlertId(Long relatedAlertId) {
+        this.relatedAlertId = relatedAlertId;
+    }
+
+    public Symbol getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
+    }
+
     public User getUser() {
         return user;
     }
@@ -169,28 +152,11 @@ public class PriceAlert {
         this.user = user;
     }
 
-    public Boolean getRelated() {
-        return isRelated;
+    public String getCommunicate() {
+        return communicate;
     }
-
-    public void setRelated(Boolean related) {
-        isRelated = related;
-    }
-
-    public Boolean getToNotify() {
-        return isToNotify;
-    }
-
-    public void setToNotify(Boolean toNotify) {
-        isToNotify = toNotify;
-    }
-
-    public Long getNotifyAlertId() {
-        return notifyAlertId;
-    }
-
-    public void setNotifyAlertId(Long notifyAlertId) {
-        this.notifyAlertId = notifyAlertId;
+    public void setCommunicate(String communicate) {
+        this.communicate = communicate;
     }
 
     @Override
@@ -203,24 +169,15 @@ public class PriceAlert {
 
     @Override
     public String toString() {
-        return "PriceAlert{" +
+        return "PriceAlert" +
+                "{ "+
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", maxPrice=" + maxPrice +
                 ", minPrice=" + minPrice +
                 ", isActive=" + isActive +
-                ", isRelated=" + isRelated +
-                ", isToNotify=" + isToNotify +
-                ", notifyAlertId=" + notifyAlertId +
                 ", symbol=" + symbol +
-                ", user=" + user +
-                '}';
+                '}'+"\n";
     }
 
-    /*  @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + symbol.getId().hashCode();
-        return result;
-    }*/
 }

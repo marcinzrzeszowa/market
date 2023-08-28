@@ -1,7 +1,8 @@
-package com.mj.market.app.market;
+package com.mj.market.app.market.api;
 
 import com.mj.market.app.DateTime;
 import com.mj.market.app.email.EmailService;
+import com.mj.market.app.market.MarketSchedulerSequence;
 import com.mj.market.app.market.dto.ObjectMapper;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleRequestDto;
@@ -34,9 +35,10 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     private final static String START_TIME = "&startTime=";
     private final static String END_TIME = "&endTime=";
 
-    public BinanceMarketApi(PriceAlertCache priceAlertCache, EmailService emailService, SymbolService symbolService) {
-        super("BinanceMarketApi", priceAlertCache, emailService, symbolService);
+    public BinanceMarketApi(PriceAlertCache priceAlertCache, SymbolService symbolService) {
+        super("BinanceMarketApi", priceAlertCache, symbolService);
     }
+
 
     @Override
     public List<SimpleResponseDto> getAllPrices(){
@@ -49,7 +51,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         String url= buildMultiSimpleSymbolsUrl(supportedSymbolCodes);
         SimpleRequestDto[] objArray= getRequestObjFromMarketApi(SimpleRequestDto[].class, url);
         if(objArray == null) return new LinkedList<>();
-        return ObjectMapper.mapToSimpleResponseDtoList(objArray);
+        return ObjectMapper.valueOfSimpleResponseDtoList(objArray);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         String url = buildSymbolUrl(symbol, interval, startDate, endDate, limit);
         String[][] str2dArray = getRequestObjFromMarketApi(String[][].class, url);
         if(str2dArray == null) return new LinkedList<>();
-        return ObjectMapper.mapToResponseDtoList(str2dArray);
+        return ObjectMapper.valueOfResponseDtoList(str2dArray);
     }
 
     @Override

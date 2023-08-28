@@ -58,9 +58,7 @@ public class PriceAlertService implements PriceAlertObservable{
                     element.setMaxPrice(alert.getMaxPrice());
                     element.setMinPrice(alert.getMinPrice());
                     element.setActive(alert.getActive());
-                    element.setNotifyAlertId((alert.getNotifyAlertId()));
-                    element.setToNotify(alert.getToNotify());
-                    element.setRelated(alert.getRelated());
+                    element.setRelatedAlertId((alert.getRelatedAlertId()));
                     return priceAlertRepository.save(element);
                 }).orElseThrow(()->new IllegalStateException());
         notifyChangeInPriceAlertsList(null);

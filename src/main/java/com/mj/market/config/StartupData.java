@@ -35,8 +35,8 @@ class StartupData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadArticles();
-        Load();
+//            loadArticles();
+//            Load();
     }
 
     private void Load(){
@@ -62,13 +62,13 @@ class StartupData implements CommandLineRunner {
         userRepository.save(user2);
 
 
-        PriceAlert pa1 = PriceAlert.newObj(btcUsdt, user1,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
-        PriceAlert pa4 = PriceAlert.newObjJustMinPrice(ethUsdt,user1,new BigDecimal(20000),"ETH below 20.000");
-        PriceAlert pa2 = PriceAlert.newObjJustMinPrice(btcUsdt,user1,new BigDecimal(16000),"Cena BTC spadła !");
+        PriceAlert pa1 = PriceAlert.newPriceAlertWithMaxMin(btcUsdt, user1,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
+        PriceAlert pa4 = PriceAlert.newPriceAlertWithMax(ethUsdt,user1,"ETH below 20.000", new BigDecimal(20000));
+        PriceAlert pa2 = PriceAlert.newPriceAlertWithMin(btcUsdt,user1,"Cena BTC spadła !", new BigDecimal(16000));
 
-        PriceAlert pa3 = PriceAlert.newObjJustMaxPrice(usdPln,user2,"Cena USD drastycznie wzrosła ! ",new BigDecimal(4.23));
-        PriceAlert pa5 = PriceAlert.newObjJustMinPrice(eurPln, user1, new BigDecimal(4.63),"EUR spada");
-        PriceAlert pa6 = PriceAlert.newObj(eurPln, user1,"EUR poza zakresem",  new BigDecimal(4.5),  new BigDecimal(4));
+        PriceAlert pa3 = PriceAlert.newPriceAlertWithMax(usdPln,user2,"Cena USD drastycznie wzrosła ! ",new BigDecimal(4.23));
+        PriceAlert pa5 = PriceAlert.newPriceAlertWithMin(eurPln, user1,"EUR spada", new BigDecimal(4.63));
+        PriceAlert pa6 = PriceAlert.newPriceAlertWithMaxMin(eurPln, user1,"EUR poza zakresem",  new BigDecimal(4.5),  new BigDecimal(4));
 
         priceAlertRepository.saveAll(Arrays.asList(pa1,pa2,pa3,pa4,pa5,pa6));
 
