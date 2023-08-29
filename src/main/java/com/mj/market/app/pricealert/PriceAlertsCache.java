@@ -2,7 +2,7 @@ package com.mj.market.app.pricealert;
 
 import java.util.List;
 
-public interface PriceAlertCache {
+public interface PriceAlertsCache {
     List<PriceAlert> findByIsActive(boolean isActive);
     List<PriceAlert> findAll();
 }

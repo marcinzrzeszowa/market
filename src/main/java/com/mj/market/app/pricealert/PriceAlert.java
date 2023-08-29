@@ -155,6 +155,7 @@ public class PriceAlert {
     public String getCommunicate() {
         return communicate;
     }
+
     public void setCommunicate(String communicate) {
         this.communicate = communicate;
     }
@@ -177,6 +178,7 @@ public class PriceAlert {
                 ", minPrice=" + minPrice +
                 ", isActive=" + isActive +
                 ", symbol=" + symbol +
+                " " + communicate +
                 '}'+"\n";
     }
 

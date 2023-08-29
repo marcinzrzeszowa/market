@@ -1,20 +1,18 @@
 package com.mj.market.app.pricealert;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PriceAlertCacheImp implements PriceAlertCache {
+public class PriceAlertsCacheImp implements PriceAlertsCache, PriceAlertObserver {
     private static boolean isCurrentAlertList = false;
     private static List<PriceAlert> priceAlerts;
     private final PriceAlertRepository priceAlertRepository;
 
     @Autowired
-    public PriceAlertCacheImp(PriceAlertRepository priceAlertRepository) {
+    public PriceAlertsCacheImp(PriceAlertRepository priceAlertRepository) {
         this.priceAlertRepository = priceAlertRepository;
     }
 
@@ -36,9 +34,10 @@ public class PriceAlertCacheImp implements PriceAlertCache {
         return priceAlerts;
     }
 
-  /*  @Override
+    @Override
     public void setNotCurrentPriceAlertsList() {
         isCurrentAlertList = false;
-        System.out.println("+++++++++  isCurrentAlertList = false;");
-    }*/
+
+        //TODO find by is active and swith off in list of alerts
+    }
 }

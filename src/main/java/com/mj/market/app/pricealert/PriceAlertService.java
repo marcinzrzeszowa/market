@@ -12,13 +12,13 @@ import java.util.List;
 public class PriceAlertService implements PriceAlertObservable{
 
     public final PriceAlertRepository priceAlertRepository;
-    //TODO stockService private final StockService stockService;
+    private final PriceAlertObserver priceAlertObserver;
     private final SymbolService symbolService;
 
     @Autowired
-    public PriceAlertService(PriceAlertRepository priceAlertRepository, SymbolService stockTickerService) {
+    public PriceAlertService(PriceAlertRepository priceAlertRepository, PriceAlertObserver priceAlertObserver, SymbolService stockTickerService) {
         this.priceAlertRepository = priceAlertRepository;
-        //TODO stockService this.stockService = stockService;
+        this.priceAlertObserver = priceAlertObserver;
         this.symbolService = stockTickerService;
     }
 
@@ -36,13 +36,13 @@ public class PriceAlertService implements PriceAlertObservable{
 
     public void savePriceAlert(PriceAlert priceAlert) {
         priceAlertRepository.save(priceAlert);
-        //TODO stockService notifyChangeInPriceAlertsList(stockService);
+        notifyChangeInPriceAlertsList(priceAlertObserver);
     }
 
     public void deletePriceAlert(Long id){
         if(priceAlertRepository.existsById(id)){
             priceAlertRepository.deleteById(id);
-            //TODO stockService notifyChangeInPriceAlertsList(stockService);
+            notifyChangeInPriceAlertsList(priceAlertObserver);
         }
     }
 
@@ -63,7 +63,7 @@ public class PriceAlertService implements PriceAlertObservable{
                 }).orElseThrow(()->new IllegalStateException());
         notifyChangeInPriceAlertsList(null);
 
-        //TODO stockService   notifyChangeInPriceAlertsList(stockService);
+        notifyChangeInPriceAlertsList(priceAlertObserver);
         return priceAlert;
     }
 

@@ -2,7 +2,7 @@ package com.mj.market.app.market;
 import com.mj.market.app.dataprocessor.MarketDataProcessor;
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import com.mj.market.app.pricealert.PriceAlert;
-import com.mj.market.app.pricealert.PriceAlertCache;
+import com.mj.market.app.pricealert.PriceAlertsCache;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
@@ -20,7 +20,7 @@ public abstract class MarketSchedulerSequence {
     private static MarketDataProcessor marketDataProcessor;
     private static SymbolService symbolService;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
-    private static PriceAlertCache priceAlertCache;
+    private static PriceAlertsCache priceAlertCache;
     private static List<PriceAlert> priceAlerts;
 
 
@@ -30,11 +30,10 @@ public abstract class MarketSchedulerSequence {
     private Set<PriceAlert> priceAlertsToNotify;
     private List<SimpleResponseDto> simpleResponseDto;
 
-
     private static final boolean loggerEnable = true;
 
     @Autowired
-    public MarketSchedulerSequence(String apiName, PriceAlertCache priceAlertCache, SymbolService symbolService) {
+    public MarketSchedulerSequence(String apiName, PriceAlertsCache priceAlertCache, SymbolService symbolService) {
         this.name = apiName;
         this.priceAlertCache = priceAlertCache;
         this.symbolService = symbolService;
@@ -67,7 +66,7 @@ public abstract class MarketSchedulerSequence {
 
                 //Analise prices and delegate calculations
                 if(simpleResponseDto != null)
-                    priceAlertsToNotify = marketDataAnalise(simpleResponseDto, getPriceAlertsBySymbolType(filteredSymbols));
+                    priceAlertsToNotify = marketDataProcessing(simpleResponseDto, getPriceAlertsBySymbolType(filteredSymbols));
                     if(loggerEnable)ColorConsole.printlnPurple("To notify: " + priceAlertsToNotify.toString());
 
                     if(priceAlertsToNotify != null){
@@ -102,9 +101,9 @@ public abstract class MarketSchedulerSequence {
         return priceAlerts.stream().filter( pa -> allSymbols.contains(pa.getSymbol())).collect(Collectors.toSet());
     }
 
-    private static Set<PriceAlert> marketDataAnalise(List<SimpleResponseDto> requestObjects, Set<PriceAlert> priceAlerts) {
+    private static Set<PriceAlert> marketDataProcessing(List<SimpleResponseDto> requestObjects, Set<PriceAlert> priceAlerts) {
         marketDataProcessor = new MarketDataProcessor(requestObjects);
-       return marketDataProcessor.performDataAnalise(priceAlerts);
+       return marketDataProcessor.processing(priceAlerts);
     }
 
     private static void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
