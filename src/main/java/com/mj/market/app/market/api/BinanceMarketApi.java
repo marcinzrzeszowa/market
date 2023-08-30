@@ -1,12 +1,13 @@
 package com.mj.market.app.market.api;
 
 import com.mj.market.app.DateTime;
+import com.mj.market.app.email.EmailService;
 import com.mj.market.app.market.MarketSchedulerSequence;
 import com.mj.market.app.market.dto.ObjectMapper;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleRequestDto;
 import com.mj.market.app.market.dto.SimpleResponseDto;
-import com.mj.market.app.pricealert.PriceAlertsCache;
+import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
@@ -34,8 +35,8 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     private final static String START_TIME = "&startTime=";
     private final static String END_TIME = "&endTime=";
 
-    public BinanceMarketApi(PriceAlertsCache priceAlertCache, SymbolService symbolService) {
-        super("BinanceMarketApi", priceAlertCache, symbolService);
+    public BinanceMarketApi(PriceAlertService priceAlertService, SymbolService symbolService, EmailService emailService) {
+        super("BinanceMarketApi", priceAlertService, symbolService, emailService);
     }
 
 

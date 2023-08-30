@@ -12,19 +12,23 @@ import java.util.List;
 public class PriceAlertService implements PriceAlertObservable{
 
     public final PriceAlertRepository priceAlertRepository;
-    private final PriceAlertObserver priceAlertObserver;
+    private final PriceAlertsObserver priceAlertObserver;
     private final SymbolService symbolService;
+    private static PriceAlertsCache priceAlertsCache ;
+
 
     @Autowired
-    public PriceAlertService(PriceAlertRepository priceAlertRepository, PriceAlertObserver priceAlertObserver, SymbolService stockTickerService) {
+    public PriceAlertService(PriceAlertRepository priceAlertRepository, PriceAlertsObserver priceAlertObserver, SymbolService stockTickerService, PriceAlertsCache priceAlertsCache) {
         this.priceAlertRepository = priceAlertRepository;
         this.priceAlertObserver = priceAlertObserver;
         this.symbolService = stockTickerService;
+        this.priceAlertsCache = priceAlertsCache;
     }
 
     public PriceAlert findById(Long id){
         return priceAlertRepository.findById(id).get();
     }
+
     public List<PriceAlert> readAllPriceAlerts(){
         return priceAlertRepository.findAll();
     }
@@ -36,13 +40,13 @@ public class PriceAlertService implements PriceAlertObservable{
 
     public void savePriceAlert(PriceAlert priceAlert) {
         priceAlertRepository.save(priceAlert);
-        notifyChangeInPriceAlertsList(priceAlertObserver);
+        notifyChangeInPriceAlertsCollection();
     }
 
     public void deletePriceAlert(Long id){
         if(priceAlertRepository.existsById(id)){
             priceAlertRepository.deleteById(id);
-            notifyChangeInPriceAlertsList(priceAlertObserver);
+            notifyChangeInPriceAlertsCollection();
         }
     }
 
@@ -61,15 +65,21 @@ public class PriceAlertService implements PriceAlertObservable{
                     element.setRelatedAlertId((alert.getRelatedAlertId()));
                     return priceAlertRepository.save(element);
                 }).orElseThrow(()->new IllegalStateException());
-        notifyChangeInPriceAlertsList(null);
-
-        notifyChangeInPriceAlertsList(priceAlertObserver);
+        notifyChangeInPriceAlertsCollection();
         return priceAlert;
     }
 
     @Override
-    public void notifyChangeInPriceAlertsList(PriceAlertObserver observer) {
-        observer.setNotCurrentPriceAlertsList();
+    public void notifyChangeInPriceAlertsCollection(PriceAlertsObserver observer) {
+        observer.setNotActualPriceAlertsCollection();
+    }
+
+    public void notifyChangeInPriceAlertsCollection() {
+        notifyChangeInPriceAlertsCollection(priceAlertObserver);
+    }
+
+    public PriceAlertsCache getPriceAlertsCache() {
+        return priceAlertsCache;
     }
 
 }

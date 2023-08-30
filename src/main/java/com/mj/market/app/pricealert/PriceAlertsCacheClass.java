@@ -6,38 +6,37 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PriceAlertsCacheImp implements PriceAlertsCache, PriceAlertObserver {
-    private static boolean isCurrentAlertList = false;
+public class PriceAlertsCacheClass implements PriceAlertsCache, PriceAlertsObserver {
+    private static boolean isActualAlertsList = false;
     private static List<PriceAlert> priceAlerts;
     private final PriceAlertRepository priceAlertRepository;
 
     @Autowired
-    public PriceAlertsCacheImp(PriceAlertRepository priceAlertRepository) {
+    public PriceAlertsCacheClass(PriceAlertRepository priceAlertRepository) {
         this.priceAlertRepository = priceAlertRepository;
     }
 
     @Override
     public List<PriceAlert> findByIsActive(boolean isActive) {
-        if (!isCurrentAlertList) {
+        if (!isActualAlertsList) {
             priceAlerts = priceAlertRepository.findByIsActive(isActive);
-            isCurrentAlertList = true;
+            isActualAlertsList = true;
         }
         return priceAlerts;
     }
 
-    @Override
+    /*@Override
     public List<PriceAlert> findAll() {
-        if (!isCurrentAlertList) {
+        if (!isActualAlertsList) {
             priceAlerts = priceAlertRepository.findAll();
-            isCurrentAlertList = true;
+            isActualAlertsList = true;
         }
         return priceAlerts;
     }
+*/
 
     @Override
-    public void setNotCurrentPriceAlertsList() {
-        isCurrentAlertList = false;
-
-        //TODO find by is active and swith off in list of alerts
+    public void setNotActualPriceAlertsCollection() {
+        isActualAlertsList = false;
     }
 }

@@ -1,8 +1,9 @@
 package com.mj.market.app.market;
 import com.mj.market.app.dataprocessor.MarketDataProcessor;
+import com.mj.market.app.email.EmailService;
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import com.mj.market.app.pricealert.PriceAlert;
-import com.mj.market.app.pricealert.PriceAlertsCache;
+import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
@@ -19,8 +20,10 @@ import java.util.stream.Collectors;
 public abstract class MarketSchedulerSequence {
     private static MarketDataProcessor marketDataProcessor;
     private static SymbolService symbolService;
+    private static PriceAlertService priceAlertService;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
-    private static PriceAlertsCache priceAlertCache;
+    private final EmailService emailService;
+
     private static List<PriceAlert> priceAlerts;
 
 
@@ -33,21 +36,24 @@ public abstract class MarketSchedulerSequence {
     private static final boolean loggerEnable = true;
 
     @Autowired
-    public MarketSchedulerSequence(String apiName, PriceAlertsCache priceAlertCache, SymbolService symbolService) {
+    public MarketSchedulerSequence(String apiName, PriceAlertService priceAlertService, SymbolService symbolService, EmailService emailService) {
         this.name = apiName;
-        this.priceAlertCache = priceAlertCache;
+        this.priceAlertService = priceAlertService;
         this.symbolService = symbolService;
+        this.emailService = emailService;
         this.supportedSymbolType = setSupportedSymbolType();
+
     }
 
     protected abstract Set<SymbolType> setSupportedSymbolType();
 
-    //Template method for every Market API
+    //Template method for every Market API. Use to check market prices in time stamp defined in MarketRequestScheduler class
     public final void startSimplePriceRequestSequence(){
 
         //Read user defined price alerts
         //TODO Query n
         priceAlerts = readActiveUserAlerts();
+
         if(loggerEnable)ColorConsole.printlnYellow("priceAlerts = "+ priceAlerts.toString());
 
         if(priceAlerts != null){
@@ -64,22 +70,29 @@ public abstract class MarketSchedulerSequence {
                 simpleResponseDto = requestPricesForScheduler(filteredSymbols);
                 if(loggerEnable)ColorConsole.printlnGreen("Response From: "+ name + " "+ simpleResponseDto.toString());
 
-                //Analise prices and delegate calculations
+                //Analise prices and delegates calculations
                 if(simpleResponseDto != null)
                     priceAlertsToNotify = marketDataProcessing(simpleResponseDto, getPriceAlertsBySymbolType(filteredSymbols));
                     if(loggerEnable)ColorConsole.printlnPurple("To notify: " + priceAlertsToNotify.toString());
 
-                    if(priceAlertsToNotify != null){
-                    //notify user ba sending email
-                    notifyUser(priceAlertsToNotify);
-                }
+                    saveChangesInPriceAlerts(priceAlertsToNotify);
+
+                    if(priceAlertsToNotify != null)
+
+                        //notify user ba sending email
+                        notifyUser(priceAlertsToNotify);
             }
         }
     }
 
+    private void saveChangesInPriceAlerts(Set<PriceAlert> priceAlertsToNotify) {
+        priceAlertsToNotify.stream().forEach(e->priceAlertService.savePriceAlert(e));
+    }
+
+
     private List<PriceAlert> readActiveUserAlerts() {
         boolean getJustActivePriceAlerts = true;
-        return priceAlertCache.findByIsActive(getJustActivePriceAlerts);
+        return priceAlertService.getPriceAlertsCache().findByIsActive(getJustActivePriceAlerts);
     }
 
     private static Set<Symbol> readDistinctTickersFromAlertList(List<PriceAlert> priceAlertsList) {
@@ -106,8 +119,8 @@ public abstract class MarketSchedulerSequence {
        return marketDataProcessor.processing(priceAlerts);
     }
 
-    private static void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
-            //TODO sent email with notification
+    private void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
+        emailService.notifyUser(priceAlertsToNotify);
     }
 
     protected Set<String> getAllSymbolCodes() {

@@ -1,29 +1,29 @@
 package com.mj.market.app.email;
 
+import com.mj.market.app.market.UserNotifier;
 import com.mj.market.app.pricealert.PriceAlert;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 @Service
-public class EmailService {
+public class EmailService implements UserNotifier {
 
     private final JavaMailSender mailSender;
-    private final static Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
-    private final String SEND_FROM_EMAIL = "projectarea@onet.pl";
-    private final String SEND_REPLY_TO_EMAIL = "projectarea@onet.pl";
+    private static final  Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
+    private static final String SEND_FROM_EMAIL = "projectarea@onet.pl";
+    private static final String SEND_REPLY_TO_EMAIL = "projectarea@onet.pl";
+    public static final boolean send = false;
 
 
     @Autowired
@@ -32,32 +32,40 @@ public class EmailService {
     }
 
     @Async
-    public void send(PriceAlert priceAlert, BigDecimal currentPrice){
+    public void notifyUser(Set<PriceAlert> priceAlert){
+        for (PriceAlert pa: priceAlert){
+            PrepareMessage result = getPrepareMessage(pa);
+            sendEmail(result.userName(), result.email(), result.titleMsg(), result.message());
+        }
+    }
+
+    private static PrepareMessage getPrepareMessage(PriceAlert priceAlert) {
         long id = priceAlert.getId();
         String userName = priceAlert.getUser().getUsername();
         String email = priceAlert.getUser().getEmail();
         String description = priceAlert.getDescription();
         String ticker = priceAlert.getSymbol().getName();
-        double price = currentPrice.doubleValue();
-        double maxPrice = priceAlert.getMaxPrice().doubleValue();
-        double minPrice = priceAlert.getMinPrice().doubleValue();
 
         DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
         String time = LocalTime.now().format(simpleDateFormat);
 
-        String titleMsg ="Zmiana ceny | Kurs:"+ ticker +" = "+ price;
+        String titleMsg ="Zmiana ceny | Kurs: "+ ticker;
         StringBuilder subjectMsg= new StringBuilder();
-        subjectMsg.append("Czas: ").append(time).append(" | Kurs: ").append(ticker).append(" ,wynosi: ").append(price).append("\n");
-        CharSequence charSequence = (maxPrice != 0 && price > maxPrice) ? subjectMsg.append("Kurs powyżej wartość: ").append(maxPrice).append("\n") : "";
-        CharSequence charSequence2 = (minPrice != 0 && price < minPrice) ? subjectMsg.append("Kurs poniżej wartość: ").append(minPrice).append("\n") : "";
-
+        subjectMsg.append("Czas: ").append(time);
         String message ="<div>" +
                         "<h1>Alert cenowy Nr: "+ id +" wysłany z strony projectarea.pl</h1>" +
                         "<h2> Cześć "+ userName + "</h2>" +
-                        "<p> Wiadomość: "+ subjectMsg.toString() +"</p>" +
+                        "<p> Wiadomość: "+ subjectMsg +"</p>" +
                         "<p>Twoja notatka: "+ description +"</p>" +
                         "</div>";
+        PrepareMessage result = new PrepareMessage(userName, email, titleMsg, message);
+        return result;
+    }
 
+    private record PrepareMessage(String userName, String email, String titleMsg, String message) {
+    }
+
+    private void sendEmail(String userName, String email, String titleMsg, String message) {
         try{
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
@@ -66,8 +74,7 @@ public class EmailService {
             helper.setSubject(titleMsg);
             helper.setFrom(SEND_FROM_EMAIL);
             helper.setReplyTo(SEND_REPLY_TO_EMAIL);
-            mailSender.send(mimeMessage);
-            System.out.println("EMAIL ZOSTAŁ WYSŁANY NA ADRESS"+ email);
+            if(send) mailSender.send(mimeMessage);
         }catch(MessagingException e){
             LOGGER.info("Nie można wysłać wiadomości pod adress: " + email + " uzytkownika: "+ userName, e);
             e.printStackTrace();

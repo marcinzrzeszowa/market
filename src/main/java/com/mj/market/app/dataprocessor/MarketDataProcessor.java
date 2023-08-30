@@ -3,17 +3,18 @@ package com.mj.market.app.dataprocessor;
 
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import com.mj.market.app.pricealert.PriceAlert;
+import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 
-
 public class MarketDataProcessor{
-    private List<SimpleResponseDto> requestObjects;
+    private final List<SimpleResponseDto> requestObjects;
     private final Set<PriceAlert> priceAlertsToNotify;
     private static final BigDecimal DEFAULT_PRICE_VALUE = BigDecimal.ZERO;
+
 
     public MarketDataProcessor(List<SimpleResponseDto> requestObjects) {
         this.requestObjects = requestObjects;

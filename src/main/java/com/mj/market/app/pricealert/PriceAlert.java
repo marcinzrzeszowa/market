@@ -56,7 +56,7 @@ public class PriceAlert {
     @Transient
     private static final boolean defaultIsActive = true;
     @Transient
-    private static  final String defaultCommunicate = "no communicate" ;
+    private static final String defaultCommunicate = "no communicate" ;
 
     public PriceAlert() {
     }
