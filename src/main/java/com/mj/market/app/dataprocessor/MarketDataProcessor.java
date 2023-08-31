@@ -22,7 +22,6 @@ public class MarketDataProcessor{
     }
 
     public Set<PriceAlert> processing(Set<PriceAlert> priceAlerts) {
-
         ListIterator<PriceAlert> priceAlertsIter = priceAlerts.stream().toList().listIterator();
         while (priceAlertsIter.hasNext()) {
             PriceAlert priceAlert = priceAlertsIter.next();
@@ -35,7 +34,6 @@ public class MarketDataProcessor{
                 changePriceAlertStatus(priceAlert, communicate.formatted(priceAlert.getSymbol(), marketPrice, "lower", priceAlert.getMinPrice()));
             }
         }
-
         return priceAlertsToNotify;
     }
 

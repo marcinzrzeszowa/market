@@ -16,7 +16,6 @@ public class PriceAlertService implements PriceAlertObservable{
     private final SymbolService symbolService;
     private static PriceAlertsCache priceAlertsCache ;
 
-
     @Autowired
     public PriceAlertService(PriceAlertRepository priceAlertRepository, PriceAlertsObserver priceAlertObserver, SymbolService stockTickerService, PriceAlertsCache priceAlertsCache) {
         this.priceAlertRepository = priceAlertRepository;

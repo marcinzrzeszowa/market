@@ -1,6 +1,5 @@
 package com.mj.market.app.market;
 import com.mj.market.app.dataprocessor.MarketDataProcessor;
-import com.mj.market.app.email.EmailService;
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import com.mj.market.app.pricealert.PriceAlert;
 import com.mj.market.app.pricealert.PriceAlertService;
@@ -22,7 +21,7 @@ public abstract class MarketSchedulerSequence {
     private static SymbolService symbolService;
     private static PriceAlertService priceAlertService;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
-    private final EmailService emailService;
+    private final UserNotifier userNotifier;
 
     private static List<PriceAlert> priceAlerts;
 
@@ -36,13 +35,12 @@ public abstract class MarketSchedulerSequence {
     private static final boolean loggerEnable = true;
 
     @Autowired
-    public MarketSchedulerSequence(String apiName, PriceAlertService priceAlertService, SymbolService symbolService, EmailService emailService) {
+    public MarketSchedulerSequence(String apiName, PriceAlertService priceAlertService, SymbolService symbolService, UserNotifier userNotifier) {
         this.name = apiName;
         this.priceAlertService = priceAlertService;
         this.symbolService = symbolService;
-        this.emailService = emailService;
+        this.userNotifier = userNotifier;
         this.supportedSymbolType = setSupportedSymbolType();
-
     }
 
     protected abstract Set<SymbolType> setSupportedSymbolType();
@@ -51,9 +49,8 @@ public abstract class MarketSchedulerSequence {
     public final void startSimplePriceRequestSequence(){
 
         //Read user defined price alerts
-        //TODO Query n
-        priceAlerts = readActiveUserAlerts();
 
+        priceAlerts = readActiveUserAlerts();
         if(loggerEnable)ColorConsole.printlnYellow("priceAlerts = "+ priceAlerts.toString());
 
         if(priceAlerts != null){
@@ -79,7 +76,7 @@ public abstract class MarketSchedulerSequence {
 
                     if(priceAlertsToNotify != null)
 
-                        //notify user ba sending email
+                        //notify user ba sending message
                         notifyUser(priceAlertsToNotify);
             }
         }
@@ -120,7 +117,7 @@ public abstract class MarketSchedulerSequence {
     }
 
     private void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
-        emailService.notifyUser(priceAlertsToNotify);
+        userNotifier.notify(priceAlertsToNotify);
     }
 
     protected Set<String> getAllSymbolCodes() {

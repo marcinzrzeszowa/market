@@ -39,7 +39,6 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         super("BinanceMarketApi", priceAlertService, symbolService, emailService);
     }
 
-
     @Override
     public List<SimpleResponseDto> getAllPrices(){
         return getPrices(super.getAllSymbolCodes());

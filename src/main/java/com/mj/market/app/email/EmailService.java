@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
+
 @Service
 public class EmailService implements UserNotifier {
 
@@ -23,23 +24,27 @@ public class EmailService implements UserNotifier {
     private static final  Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
     private static final String SEND_FROM_EMAIL = "projectarea@onet.pl";
     private static final String SEND_REPLY_TO_EMAIL = "projectarea@onet.pl";
-    public static final boolean send = false;
 
+    public static final boolean SEND = false;
 
     @Autowired
     public EmailService(JavaMailSender javaMailSender) {
         this.mailSender = javaMailSender;
     }
 
+    private record Message(String userName, String email, String titleMsg, String message) {
+    }
+
     @Async
-    public void notifyUser(Set<PriceAlert> priceAlert){
+    @Override
+    public void notify(Set<PriceAlert> priceAlert){
         for (PriceAlert pa: priceAlert){
-            PrepareMessage result = getPrepareMessage(pa);
-            sendEmail(result.userName(), result.email(), result.titleMsg(), result.message());
+            Message msg = getPrepareMessage(pa);
+            sendEmail(msg.userName(), msg.email(), msg.titleMsg(), msg.message());
         }
     }
 
-    private static PrepareMessage getPrepareMessage(PriceAlert priceAlert) {
+    private static Message getPrepareMessage(PriceAlert priceAlert) {
         long id = priceAlert.getId();
         String userName = priceAlert.getUser().getUsername();
         String email = priceAlert.getUser().getEmail();
@@ -58,12 +63,10 @@ public class EmailService implements UserNotifier {
                         "<p> Wiadomość: "+ subjectMsg +"</p>" +
                         "<p>Twoja notatka: "+ description +"</p>" +
                         "</div>";
-        PrepareMessage result = new PrepareMessage(userName, email, titleMsg, message);
+        Message result = new Message(userName, email, titleMsg, message);
         return result;
     }
 
-    private record PrepareMessage(String userName, String email, String titleMsg, String message) {
-    }
 
     private void sendEmail(String userName, String email, String titleMsg, String message) {
         try{
@@ -74,7 +77,7 @@ public class EmailService implements UserNotifier {
             helper.setSubject(titleMsg);
             helper.setFrom(SEND_FROM_EMAIL);
             helper.setReplyTo(SEND_REPLY_TO_EMAIL);
-            if(send) mailSender.send(mimeMessage);
+            if(SEND) mailSender.send(mimeMessage);
         }catch(MessagingException e){
             LOGGER.info("Nie można wysłać wiadomości pod adress: " + email + " uzytkownika: "+ userName, e);
             e.printStackTrace();

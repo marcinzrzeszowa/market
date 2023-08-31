@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BankierMarketAPI{
+public class BankierMarketAPI {
 
+
+    //TODO
 
     public static final String EURPLN = "https://www.bankier.pl/waluty/kursy-walut/forex/EURPLN";
     public static final String USDPLN ="https://www.bankier.pl/waluty/kursy-walut/forex/USDPLN";
