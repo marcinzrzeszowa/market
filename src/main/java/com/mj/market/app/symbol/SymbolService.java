@@ -13,20 +13,18 @@ public class SymbolService {
     private final SymbolRepository symbolRepository;
     private static Set<String> validSymbolFormats;
 
-
-
     @Autowired
     public SymbolService(SymbolRepository symbolRepository) {
         this.symbolRepository = symbolRepository;
-        validSymbolFormats = defineValidSymbolsFormats();
+        createValidSymbolsFormats();
     }
 
-    private Set<String> defineValidSymbolsFormats() {
+    private void createValidSymbolsFormats() {
         List<Symbol> symbols = getAllSymbols();
         Set<String> codes = symbols.stream()
                 .map( symbol -> symbol.getCode())
                 .collect(Collectors.toSet());
-        return codes;
+        this.validSymbolFormats = codes;
     }
 
     public Symbol findById(Long id){
@@ -52,5 +50,14 @@ public class SymbolService {
     public String getSymbolsByCode(String code) {
         String result = validSymbolFormats.contains(code)? code: "";
         return result;
+    }
+
+    public void saveAllSymbols(List<Symbol> list) {
+        symbolRepository.saveAll(list);
+        refreshValidSymbolFormats();
+    }
+
+    private void refreshValidSymbolFormats() {
+        createValidSymbolsFormats();
     }
 }

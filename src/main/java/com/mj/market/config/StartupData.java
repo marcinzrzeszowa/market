@@ -1,45 +1,57 @@
 package com.mj.market.config;
 
 import com.mj.market.app.article.Article;
-import com.mj.market.app.article.ArticleRepository;
+import com.mj.market.app.article.ArticleService;
 import com.mj.market.app.pricealert.PriceAlert;
-import com.mj.market.app.pricealert.PriceAlertRepository;
+import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
-import com.mj.market.app.symbol.SymbolRepository;
+import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
+
+import com.mj.market.app.user.Role;
 import com.mj.market.app.user.User;
-import com.mj.market.app.user.UserRepository;
 import com.mj.market.app.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import static com.mj.market.config.Config.passwordEncoder;
+
 @Component
+@AllArgsConstructor
 class StartupData implements CommandLineRunner {
 
-    private final ArticleRepository articleRepository;
-    private final PriceAlertRepository priceAlertRepository;
-    private final UserRepository userRepository;
-    private final SymbolRepository stockTickerRepository;
-
-    @Autowired
-    public StartupData(ArticleRepository articleRepository, PriceAlertRepository priceAlertRepository, UserRepository userRepository, SymbolRepository stockTickerRepository) {
-        this.articleRepository = articleRepository;
-        this.priceAlertRepository = priceAlertRepository;
-        this.userRepository = userRepository;
-        this.stockTickerRepository = stockTickerRepository;
-    }
+    private final UserService userService;
+    private final ArticleService articleService;
+    private final SymbolService symbolService;
+    private final PriceAlertService priceAlertService;
 
     @Override
     public void run(String... args) throws Exception {
-//            loadArticles();
-//            Load();
+
+          loadArticles();
+          Load();
     }
 
     private void Load(){
+        User admin = User.builder()
+                .username("admin")
+                .email("marcinzbrzozowa@gmail.com")
+                .role(Role.ADMIN)
+                .password(passwordEncoder().encode("123"))
+                .build();
+        User user1 = User.builder()
+                .username("user")
+                .email("marcinzbrzozowa@gmail.com")
+                .role(Role.USER)
+                .password(passwordEncoder().encode("user"))
+                .build();
+        userService.saveUser(admin);
+        userService.saveUser(user1);
+
 
         Symbol btcUsdt = new Symbol("BTC/USDT","BTCUSDT", SymbolType.KRYPTOWALUTA);
         Symbol ethUsdt  = new Symbol("ETH/USDT","ETHUSDT", SymbolType.KRYPTOWALUTA);
@@ -53,24 +65,18 @@ class StartupData implements CommandLineRunner {
 
         Symbol silverUsd = new Symbol("SREBRO/USD","SREBRO", SymbolType.SUROWIEC);
 
-        stockTickerRepository.saveAll(Arrays.asList(btcUsdt,ethUsdt,bnbUsdt,maticUsdt,eurPln,usdPln,eurUsd,chfPln,silverUsd));
+        symbolService.saveAllSymbols(Arrays.asList(btcUsdt,ethUsdt,bnbUsdt,maticUsdt,eurPln,usdPln,eurUsd,chfPln,silverUsd));
 
 
-        User user1 = new User("Admin", UserService.passwordEncoder().encode("123"),"ROLE_ADMIN", "marcinzbrzozowa@gmail.com");
-        User user2 = new User("test", UserService.passwordEncoder().encode("test"),"ROLE_MODERATOR", "test@gmail.com");
-        userRepository.save(user1);
-        userRepository.save(user2);
+        PriceAlert pa1 = PriceAlert.newPriceAlertWithMaxMin(btcUsdt, admin,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
+        PriceAlert pa4 = PriceAlert.newPriceAlertWithMax(ethUsdt,admin,"ETH below 20.000", new BigDecimal(20000));
+        PriceAlert pa2 = PriceAlert.newPriceAlertWithMin(btcUsdt,admin,"Cena BTC spadła !", new BigDecimal(16000));
 
-
-        PriceAlert pa1 = PriceAlert.newPriceAlertWithMaxMin(btcUsdt, user1,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
-        PriceAlert pa4 = PriceAlert.newPriceAlertWithMax(ethUsdt,user1,"ETH below 20.000", new BigDecimal(20000));
-        PriceAlert pa2 = PriceAlert.newPriceAlertWithMin(btcUsdt,user1,"Cena BTC spadła !", new BigDecimal(16000));
-
-        PriceAlert pa3 = PriceAlert.newPriceAlertWithMax(usdPln,user2,"Cena USD drastycznie wzrosła ! ",new BigDecimal(4.23));
+        PriceAlert pa3 = PriceAlert.newPriceAlertWithMax(usdPln,user1,"Cena USD drastycznie wzrosła ! ",new BigDecimal(4.23));
         PriceAlert pa5 = PriceAlert.newPriceAlertWithMin(eurPln, user1,"EUR spada", new BigDecimal(4.63));
         PriceAlert pa6 = PriceAlert.newPriceAlertWithMaxMin(eurPln, user1,"EUR poza zakresem",  new BigDecimal(4.5),  new BigDecimal(4));
 
-        priceAlertRepository.saveAll(Arrays.asList(pa1,pa2,pa3,pa4,pa5,pa6));
+        priceAlertService.savePriceAlerts(Arrays.asList(pa1,pa2,pa3,pa4,pa5,pa6));
 
     }
     //&nbsp;
@@ -117,6 +123,6 @@ class StartupData implements CommandLineRunner {
                         "</div>" +
                 "   </li>"+
                 "</ul>");
-        articleRepository.saveAll(Arrays.asList(a1));
+        articleService.saveArticles(Arrays.asList(a1));
     }
 }

@@ -20,7 +20,7 @@ public class PriceAlertsCacheClass implements PriceAlertsCache, PriceAlertsObser
     public List<PriceAlert> findByIsActive(boolean isActive) {
         if (!isActualAlertsList) {
             priceAlerts = priceAlertRepository.findByIsActive(isActive);
-            isActualAlertsList = true;
+            if(priceAlerts != null) isActualAlertsList = true;
         }
         return priceAlerts;
     }

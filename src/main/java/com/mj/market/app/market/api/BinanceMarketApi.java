@@ -1,7 +1,7 @@
 package com.mj.market.app.market.api;
 
 import com.mj.market.app.DateTime;
-import com.mj.market.app.email.EmailService;
+import com.mj.market.app.notifier.EmailService;
 import com.mj.market.app.market.MarketSchedulerSequence;
 import com.mj.market.app.market.dto.ObjectMapper;
 import com.mj.market.app.market.dto.ResponseDto;
@@ -93,19 +93,19 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         return url.toString();
     }
 
-    private String buildMultiSimpleSymbolsUrl(List<String> params){
-        if(params == null) throw new IllegalArgumentException();
+    private String buildMultiSimpleSymbolsUrl(List<String> symbols){
+        if(symbols == null && symbols.isEmpty()) throw new IllegalArgumentException();
 
         StringBuilder url = new StringBuilder();
         url.append(URL_SIMPLE_PRICES);
         url.append("[");
-        if(params.size()>1){
-            for (String param : params) {
+        if(symbols.size()>1){
+            for (String param : symbols) {
                 url.append("\"").append(param).append("\"").append(",");
             }
             url.replace(url.lastIndexOf(","),url.lastIndexOf(",")+1,"");
         }else{
-            url.append("\"").append(params.get(0)).append("\"");
+            url.append("\"").append(symbols.get(0)).append("\"");
         }
         url.append("]");
         return url.toString();

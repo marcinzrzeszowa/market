@@ -22,7 +22,7 @@ public class MarketRequestScheduler {
         this.cryptoMarketSchedulerSequenceSecond = cryptoMarketSchedulerSequenceSecond;
     }
 
-    @Scheduled(fixedRate = 3 * second) // zmienic na 5 min
+    @Scheduled(fixedRate = 3 * second, initialDelay = 3 * second) // zmienic na 5 min
     private void marketScheduler5m(){
 
         ColorConsole.printlnBlue(Thread.currentThread().getName());
@@ -31,7 +31,7 @@ public class MarketRequestScheduler {
 
     }
 
-    @Scheduled(fixedRate = 3 * day) //zmienic na 1 na dzien
+    @Scheduled(fixedRate = 3 * day, initialDelay = 3 * second) //zmienic na 1 na dzien
     private void marketScheduler1D(){
         ColorConsole.printlnGreen(Thread.currentThread().getName());
 

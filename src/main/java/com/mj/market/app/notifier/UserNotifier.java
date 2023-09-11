@@ -1,4 +1,4 @@
-package com.mj.market.app.market;
+package com.mj.market.app.notifier;
 
 import com.mj.market.app.pricealert.PriceAlert;
 

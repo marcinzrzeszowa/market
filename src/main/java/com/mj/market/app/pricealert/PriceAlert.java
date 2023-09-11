@@ -42,7 +42,7 @@ public class PriceAlert {
     @JoinColumn(name = "symbol")
     private Symbol symbol;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private User user;
 

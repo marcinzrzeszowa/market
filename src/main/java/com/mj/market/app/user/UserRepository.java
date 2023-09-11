@@ -1,5 +1,6 @@
 package com.mj.market.app.user;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User>findAll();
     Optional<User> findById(Long id);
     void deleteById(Long id);
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

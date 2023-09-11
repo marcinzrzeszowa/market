@@ -1,6 +1,7 @@
 package com.mj.market.app.market;
 import com.mj.market.app.dataprocessor.MarketDataProcessor;
 import com.mj.market.app.market.dto.SimpleResponseDto;
+import com.mj.market.app.notifier.UserNotifier;
 import com.mj.market.app.pricealert.PriceAlert;
 import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
@@ -9,6 +10,7 @@ import com.mj.market.app.symbol.SymbolType;
 import com.mj.market.config.ColorConsole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -22,7 +24,6 @@ public abstract class MarketSchedulerSequence {
     private static PriceAlertService priceAlertService;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
     private final UserNotifier userNotifier;
-
     private static List<PriceAlert> priceAlerts;
 
 
@@ -51,26 +52,26 @@ public abstract class MarketSchedulerSequence {
         //Read user defined price alerts
 
         priceAlerts = readActiveUserAlerts();
-        if(loggerEnable)ColorConsole.printlnYellow("priceAlerts = "+ priceAlerts.toString());
+        if(loggerEnable)ColorConsole.printlnYellow("1/4 : priceAlerts = "+ priceAlerts.toString());
 
-        if(priceAlerts != null){
+        if(priceAlerts != null && !priceAlerts.isEmpty()){
 
             //Get set of interesting Symbols from all users alert list
             selectedSymbols = readDistinctTickersFromAlertList(priceAlerts);
 
             //Get symbols matching Market API implementation
             filteredSymbols = getSymbolsByType(selectedSymbols);
-            if(loggerEnable)ColorConsole.printlnRed("filteredSymbols = "+ filteredSymbols.toString());
+            if(loggerEnable)ColorConsole.printlnRed("2/4 : filteredSymbols = "+ filteredSymbols.toString());
 
             if(filteredSymbols != null && !filteredSymbols.isEmpty()){
                 //get market symbols prices from API
                 simpleResponseDto = requestPricesForScheduler(filteredSymbols);
-                if(loggerEnable)ColorConsole.printlnGreen("Response From: "+ name + " "+ simpleResponseDto.toString());
+                if(loggerEnable)ColorConsole.printlnGreen("3/4 : Response From: "+ name + " "+ simpleResponseDto.toString());
 
                 //Analise prices and delegates calculations
                 if(simpleResponseDto != null)
                     priceAlertsToNotify = marketDataProcessing(simpleResponseDto, getPriceAlertsBySymbolType(filteredSymbols));
-                    if(loggerEnable)ColorConsole.printlnPurple("To notify: " + priceAlertsToNotify.toString());
+                    if(loggerEnable)ColorConsole.printlnPurple("4/4 Go notify: " + priceAlertsToNotify.toString());
 
                     saveChangesInPriceAlerts(priceAlertsToNotify);
 

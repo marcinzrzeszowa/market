@@ -1,6 +1,5 @@
-package com.mj.market.app.email;
+package com.mj.market.app.notifier;
 
-import com.mj.market.app.market.UserNotifier;
 import com.mj.market.app.pricealert.PriceAlert;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -21,10 +20,9 @@ import java.util.Set;
 public class EmailService implements UserNotifier {
 
     private final JavaMailSender mailSender;
-    private static final  Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
+    private static final Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
     private static final String SEND_FROM_EMAIL = "projectarea@onet.pl";
     private static final String SEND_REPLY_TO_EMAIL = "projectarea@onet.pl";
-
     public static final boolean SEND = false;
 
     @Autowired
@@ -39,12 +37,12 @@ public class EmailService implements UserNotifier {
     @Override
     public void notify(Set<PriceAlert> priceAlert){
         for (PriceAlert pa: priceAlert){
-            Message msg = getPrepareMessage(pa);
+            Message msg = getMessage(pa);
             sendEmail(msg.userName(), msg.email(), msg.titleMsg(), msg.message());
         }
     }
 
-    private static Message getPrepareMessage(PriceAlert priceAlert) {
+    private static Message getMessage(PriceAlert priceAlert) {
         long id = priceAlert.getId();
         String userName = priceAlert.getUser().getUsername();
         String email = priceAlert.getUser().getEmail();

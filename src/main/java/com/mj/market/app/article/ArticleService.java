@@ -80,4 +80,8 @@ public class ArticleService {
        // return articleRepository.findById(articleId).stream().findFirst().orElse(null);
         return articleRepository.findById(articleId).get();
     }
+
+    public void saveArticles(List<Article> list) {
+        articleRepository.saveAll(list);
+    }
 }

@@ -81,4 +81,7 @@ public class PriceAlertService implements PriceAlertObservable{
         return priceAlertsCache;
     }
 
+    public void savePriceAlerts(List<PriceAlert> list) {
+        priceAlertRepository.saveAll(list);
+    }
 }

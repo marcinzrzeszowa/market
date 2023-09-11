@@ -28,7 +28,7 @@ public class ArticleController {
         return "home";
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping("/articles/article/{id}")
     public String editProduct(@PathVariable("id") Long articleId,
                               Model model){
         Article article = articleService.findArticle(articleId);

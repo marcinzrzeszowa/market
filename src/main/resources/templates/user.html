@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/header :: headerCss">
+<head th:replace="~{fragments/header :: headerCss}">
 </head>
 
 <body>
 
-    <div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="content">
     <div class="contentLeft">
     <form method="POST" th:object="${user}">
@@ -25,6 +25,6 @@
     </form>
     </div>
 </div>
-    <div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

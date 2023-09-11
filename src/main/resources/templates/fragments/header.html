@@ -8,8 +8,9 @@
     <meta name = "keywords" content = "Java, programowanie, projekty" />
     <meta name = "description" content = "Strona poświęcona tematyce programowania" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
 </head>
+
 <body>
 <div th:fragment="header"  class="headerMenu" >
     <div th:class="contentCenter">
@@ -20,7 +21,7 @@
         <span></span>
         <span></span>
         <a th:href="@{/home}" class="menu-logo">
-            <img th:src="@{/logo100w.png}" />
+            <img th:src="@{/css/logo100w.png}" />
         </a>
         <div class="menu">
             <ul>
