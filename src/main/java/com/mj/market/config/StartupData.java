@@ -67,7 +67,6 @@ class StartupData implements CommandLineRunner {
 
         symbolService.saveAllSymbols(Arrays.asList(btcUsdt,ethUsdt,bnbUsdt,maticUsdt,eurPln,usdPln,eurUsd,chfPln,silverUsd));
 
-
         PriceAlert pa1 = PriceAlert.newPriceAlertWithMaxMin(btcUsdt, admin,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
         PriceAlert pa4 = PriceAlert.newPriceAlertWithMax(ethUsdt,admin,"ETH below 20.000", new BigDecimal(20000));
         PriceAlert pa2 = PriceAlert.newPriceAlertWithMin(btcUsdt,admin,"Cena BTC spadła !", new BigDecimal(16000));

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Service
 public class SymbolService {
     private final SymbolRepository symbolRepository;
-    private static Set<String> validSymbolFormats;
+    private static Set<Symbol> validSymbolFormats;
 
     @Autowired
     public SymbolService(SymbolRepository symbolRepository) {
@@ -21,10 +21,7 @@ public class SymbolService {
 
     private void createValidSymbolsFormats() {
         List<Symbol> symbols = getAllSymbols();
-        Set<String> codes = symbols.stream()
-                .map( symbol -> symbol.getCode())
-                .collect(Collectors.toSet());
-        this.validSymbolFormats = codes;
+        this.validSymbolFormats = symbols.stream().collect(Collectors.toSet());
     }
 
     public Symbol findById(Long id){
@@ -35,19 +32,15 @@ public class SymbolService {
         return symbolRepository.findAll();
     }
 
-    public static Set<String> getAllSymbolFormats() {
+    public static Set<Symbol> getAllSymbolFormats() {
         return validSymbolFormats;
     }
 
-    public List<String> getSymbolsByCode(Set<String> symbolsCodes) {
-        Set<String> set = new HashSet<>();
-        for (String code: symbolsCodes){
-             if(validSymbolFormats.contains(code))set.add(code);
-        }
-        return set.stream().toList();
+    public List<String> getSymbolsInCorrectFormat(Set<String> symbolsCodes) {
+        return symbolsCodes.stream().toList();
     }
 
-    public String getSymbolsByCode(String code) {
+    public String getSymbolsInCorrectFormat(String code) {
         String result = validSymbolFormats.contains(code)? code: "";
         return result;
     }

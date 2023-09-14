@@ -37,12 +37,12 @@ public class EmailService implements UserNotifier {
     @Override
     public void notify(Set<PriceAlert> priceAlert){
         for (PriceAlert pa: priceAlert){
-            Message msg = getMessage(pa);
+            Message msg = createMessage(pa);
             sendEmail(msg.userName(), msg.email(), msg.titleMsg(), msg.message());
         }
     }
 
-    private static Message getMessage(PriceAlert priceAlert) {
+    private static Message createMessage(PriceAlert priceAlert) {
         long id = priceAlert.getId();
         String userName = priceAlert.getUser().getUsername();
         String email = priceAlert.getUser().getEmail();

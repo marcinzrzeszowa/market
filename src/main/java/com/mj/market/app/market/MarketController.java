@@ -4,15 +4,15 @@ import com.mj.market.app.chart.MarketChart;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class MarketController {
 
     private final MarketService marketService;
@@ -24,8 +24,15 @@ public class MarketController {
         this.marketChart = marketChart;
     }
 
-    //@EventListener(ApplicationReadyEvent.class)
-    //@Cacheable("getSimplePrices")
+
+
+    //OLD project0
+    @GetMapping(value = {"/stocks"})
+    public String getAvailableStocks(Model model){
+        model.addAttribute("stocks",  marketService.getAllPrices());
+        return "stocks";
+    }
+
     @GetMapping("/prices")
     public List<SimpleResponseDto> getAllPrices(){
        return marketService.getAllPrices();
@@ -60,11 +67,4 @@ public class MarketController {
     }
 */
 
-
-    //OLD project0
-    @GetMapping(value = {"/stocks"})
-    public String getAvailableStocks(Model model){
-        model.addAttribute("stocks",  marketService.getAllPrices());
-        return "stocks";
-    }
 }

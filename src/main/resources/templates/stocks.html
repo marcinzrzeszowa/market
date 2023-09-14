@@ -12,23 +12,18 @@
     <br>
 <table >
     <tr>
-        <th>Nazwa</th>
-        <th>Cena</th>
         <th>Symbol</th>
-        <th>Cena Zamknięcia D</th>
-        <th>Zmiana Ceny D</th>
-        <th>Średnia 50 D</th>
-        <th>Średnia 200 D</th>
+        <th>Cena</th>
        <!-- <th sec:authorize="isAuthenticated()">Alert Użytkownika</th>-->
     </tr>
-    <tr th:each="stockElement: ${stocks}">
-        <td th:text="${stockElement.getName()} ?: 'null'"/>
-        <bolt><td th:text="${stockElement.getPrice()}" th:style="'color: blue;'"/></bolt>
-        <td th:text="${stockElement.getSymbol()}"/>
-        <td th:text="${stockElement.getPreviousClose()}"/>
-        <td th:text="${stockElement.getChangeInPercent() +' %'}" th:style="${stockElement.getChangeInPercent() > 0 ? 'color: green;' : 'color: red;'}"/>
-        <td th:text="${stockElement.getChangeFromAvg50InPercent() +' %'}" th:style="${stockElement.getChangeFromAvg50InPercent()  > 0 ? 'color: green;' : 'color: red;'}"/>
-        <td th:text="${stockElement.getChangeFromAvg200InPercent() +' %'}" th:style="${stockElement.getChangeFromAvg200InPercent() > 0 ? 'color: green;' : 'color: red;'}"/>
+    <tr th:each="stock: ${stocks}">
+        <td th:text="${stock.getCode()} ?: 'null'"/>
+        <bolt><td th:text="${stock.getPrice()}" th:style="'color: blue;'"/></bolt>
+        <td th:text="${stock.getPrice()}"/>
+
+<!--        <td th:text="${stock.getChangeInPercent() +' %'}" th:style="${stockElement.getChangeInPercent() > 0 ? 'color: green;' : 'color: red;'}"/>
+        <td th:text="${stock.getChangeFromAvg50InPercent() +' %'}" th:style="${stockElement.getChangeFromAvg50InPercent()  > 0 ? 'color: green;' : 'color: red;'}"/>
+        <td th:text="${stock.getChangeFromAvg200InPercent() +' %'}" th:style="${stockElement.getChangeFromAvg200InPercent() > 0 ? 'color: green;' : 'color: red;'}"/>-->
      <!--   <td sec:authorize="isAuthenticated()" >
             <a sec:authorize="isAuthenticated()"  th:href="@{'/stocks/{ticker}'(ticker=${stockElement.getSymbol()})}">Dodaj</a>
         </td>-->

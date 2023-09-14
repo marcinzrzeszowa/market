@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -37,9 +38,12 @@ public class MarketService{
     }
 
     private List<SimpleResponseDto> getAllPricesByMarketApi() {
+        List<SimpleResponseDto> aggregatedPriceAlerstsList = new LinkedList<>();
 
-        //TODO for Apis
-        return cryptoMarketApi.getAllPrices();
+        aggregatedPriceAlerstsList.addAll(cryptoMarketApi.getAllPrices());
+        //TODO add FIAT
+
+        return aggregatedPriceAlerstsList;
     }
 }
 

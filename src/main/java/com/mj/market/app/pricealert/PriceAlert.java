@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity(name="PriceAlert")
 @Table(name="price_alert")
@@ -158,6 +159,12 @@ public class PriceAlert {
 
     public void setCommunicate(String communicate) {
         this.communicate = communicate;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, maxPrice, minPrice, isActive, relatedAlertId, communicate, symbol, user);
     }
 
     @Override

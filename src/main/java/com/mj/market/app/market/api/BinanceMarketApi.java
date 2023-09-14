@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Qualifier("BinanceMarketApi")
-public class BinanceMarketApi extends MarketSchedulerSequence implements MarketApi {
+public class BinanceMarketApi extends MarketSchedulerSequence implements MarketApi{
     private RestTemplate restTemplate = new RestTemplate();
     private static final EnumSet<SymbolType> handledSymbols = EnumSet.of(SymbolType.KRYPTOWALUTA);
 
@@ -41,12 +41,14 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
 
     @Override
     public List<SimpleResponseDto> getAllPrices(){
-        return getPrices(super.getAllSymbolCodes());
+        Set<Symbol> allSymbols = super.getAllSymbols();
+        Set<Symbol> symbols  = super.getSymbolsSupportedByMarketApi(allSymbols);
+        Set<String> strSymbols = super.getSymbols(symbols);
+        return getPrices(strSymbols);
     }
 
-
     public List<SimpleResponseDto> getPrices(Set<String> symbols) {
-        List<String> supportedSymbolCodes = super.getSupportedSymbolCodes(symbols);
+        List<String> supportedSymbolCodes = super.getValidSymbolCodes(symbols);
         String url= buildMultiSimpleSymbolsUrl(supportedSymbolCodes);
         SimpleRequestDto[] objArray= getRequestObjFromMarketApi(SimpleRequestDto[].class, url);
         if(objArray == null) return new LinkedList<>();
@@ -94,7 +96,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     }
 
     private String buildMultiSimpleSymbolsUrl(List<String> symbols){
-        if(symbols == null && symbols.isEmpty()) throw new IllegalArgumentException();
+        if(symbols == null || symbols.isEmpty()) throw new IllegalArgumentException("buildMultiSimpleSymbolsUrl(): No Symbols in list");
 
         StringBuilder url = new StringBuilder();
         url.append(URL_SIMPLE_PRICES);

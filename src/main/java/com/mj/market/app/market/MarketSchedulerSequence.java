@@ -10,7 +10,6 @@ import com.mj.market.app.symbol.SymbolType;
 import com.mj.market.config.ColorConsole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -60,7 +59,7 @@ public abstract class MarketSchedulerSequence {
             selectedSymbols = readDistinctTickersFromAlertList(priceAlerts);
 
             //Get symbols matching Market API implementation
-            filteredSymbols = getSymbolsByType(selectedSymbols);
+            filteredSymbols = getSymbolsSupportedByMarketApi(selectedSymbols);
             if(loggerEnable)ColorConsole.printlnRed("2/4 : filteredSymbols = "+ filteredSymbols.toString());
 
             if(filteredSymbols != null && !filteredSymbols.isEmpty()){
@@ -102,12 +101,18 @@ public abstract class MarketSchedulerSequence {
     }
     protected abstract List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> marketSymbols);
 
-    private Set<Symbol> getSymbolsByType(Set<Symbol> allSymbols){
+    protected Set<Symbol> getSymbolsSupportedByMarketApi(Set<Symbol> allSymbols){
        Set<Symbol> result = allSymbols.stream()
                 .filter( e-> supportedSymbolType.contains(e.getType()))
                 .collect(Collectors.toSet());
         return result;
     }
+    protected Set<String> getSymbols(Set<Symbol>symbols){
+        return symbols.stream()
+                .map(e->e.getCode())
+                .collect(Collectors.toSet());
+    }
+
     private Set<PriceAlert> getPriceAlertsBySymbolType(Set<Symbol> allSymbols){
         return priceAlerts.stream().filter( pa -> allSymbols.contains(pa.getSymbol())).collect(Collectors.toSet());
     }
@@ -116,20 +121,19 @@ public abstract class MarketSchedulerSequence {
         marketDataProcessor = new MarketDataProcessor(requestObjects);
        return marketDataProcessor.processing(priceAlerts);
     }
+    protected Set<Symbol> getAllSymbols(){
+        return symbolService.getAllSymbols().stream().collect(Collectors.toSet());
+    }
 
     private void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
         userNotifier.notify(priceAlertsToNotify);
     }
 
-    protected Set<String> getAllSymbolCodes() {
-        return symbolService.getAllSymbolFormats();
-    }
-
     protected String getSymbolByCode(String code) {
-        return symbolService.getSymbolsByCode(code);
+        return symbolService.getSymbolsInCorrectFormat(code);
     }
 
-    protected List<String> getSupportedSymbolCodes(Set<String> allSymbols){
-        return symbolService.getSymbolsByCode(allSymbols);
+    protected List<String> getValidSymbolCodes(Set<String> allSymbols){
+        return symbolService.getSymbolsInCorrectFormat(allSymbols);
     }
 }
