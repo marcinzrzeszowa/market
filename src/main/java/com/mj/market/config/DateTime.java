@@ -1,4 +1,4 @@
-package com.mj.market.app;
+package com.mj.market.config;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

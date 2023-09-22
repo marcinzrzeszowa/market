@@ -1,7 +1,8 @@
 package com.mj.market.app.pricealert;
 
 import java.util.List;
+import java.util.Vector;
 
 public interface PriceAlertsCache {
-    List<PriceAlert> findByIsActive(boolean isActive);
+    Vector<PriceAlert> findByIsActive(boolean isActive);
 }

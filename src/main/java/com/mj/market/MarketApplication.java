@@ -15,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EntityScan
 @EnableJpaRepositories
 @EnableScheduling
-
 public class MarketApplication {
 
 	public static void main(String[] args) {

@@ -1,7 +1,18 @@
 package com.mj.market.app.market.api;
 
 
+import com.mj.market.app.market.MarketSchedulerSequence;
+import com.mj.market.app.market.dto.ResponseDto;
+import com.mj.market.app.market.dto.SimpleRequestDto;
+import com.mj.market.app.market.dto.SimpleResponseDto;
+import com.mj.market.app.notifier.UserNotifier;
+import com.mj.market.app.pricealert.PriceAlertService;
+import com.mj.market.app.symbol.Symbol;
+import com.mj.market.app.symbol.SymbolService;
+import com.mj.market.app.symbol.SymbolType;
 import com.mj.market.config.ColorConsole;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,17 +20,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BankierMarketAPI {
+@Component
+@Qualifier("BankierMarketApi")
+public class BankierMarketApi extends MarketSchedulerSequence implements MarketApi {
 
+
+    private static final EnumSet<SymbolType> handledSymbols = EnumSet.of(SymbolType.KRYPTOWALUTA);
 
     //TODO
-
     public static final String EURPLN = "https://www.bankier.pl/waluty/kursy-walut/forex/EURPLN";
     public static final String USDPLN ="https://www.bankier.pl/waluty/kursy-walut/forex/USDPLN";
     public static final String EURUSD ="https://www.bankier.pl/waluty/kursy-walut/forex/EURUSD";
@@ -28,9 +41,11 @@ public class BankierMarketAPI {
     public static final String SILVER ="https://www.bankier.pl/inwestowanie/profile/quote.html?symbol=SREBRO";
     //public static final String COPPER ="https://www.bankier.pl/inwestowanie/profile/quote.html?symbol=MIEDZ";
 
-
-
     private final String GPW="https://data.nasdaq.com/data/WSE-warsaw-stock-exchange-gpw";
+
+    public BankierMarketApi(PriceAlertService priceAlertService, SymbolService symbolService, UserNotifier userNotifier) {
+        super("BankierMarketApi", priceAlertService, symbolService, userNotifier);
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -144,6 +159,30 @@ public class BankierMarketAPI {
         }
     }
 
+    @Override
+    protected Set<SymbolType> setSupportedSymbolType() {
+        return handledSymbols;
+    }
+
+    @Override
+    protected List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> marketSymbols) {
+        return null;
+    }
+
+    @Override
+    public List<SimpleResponseDto> getAllPrices() {
+        return null;
+    }
+
+    @Override
+    public SimpleRequestDto[] getPrices(Set<String> symbols) {
+        return null;
+    }
+
+    @Override
+    public List<ResponseDto> getDetailPriceHistory(String symbol, Interval interval, LocalDateTime startDate, LocalDateTime endDate, int limit) {
+        return null;
+    }
 
 
     private static class RawAttribute {

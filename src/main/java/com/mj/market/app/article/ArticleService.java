@@ -3,8 +3,11 @@ package com.mj.market.app.article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -45,7 +48,10 @@ public class ArticleService {
     }
 
     public List<Article> getAllArticles( ){
-        return articleRepository.findAll();
+        return articleRepository.findAll()
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public Article saveArticle(Article article) {

@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Vector;
 
 @Service
 public class PriceAlertsCacheClass implements PriceAlertsCache, PriceAlertsObserver {
     private static boolean isActualAlertsList = false;
-    private static List<PriceAlert> priceAlerts;
+    private static Vector<PriceAlert> priceAlerts;
     private final PriceAlertRepository priceAlertRepository;
 
     @Autowired
@@ -17,7 +18,7 @@ public class PriceAlertsCacheClass implements PriceAlertsCache, PriceAlertsObser
     }
 
     @Override
-    public List<PriceAlert> findByIsActive(boolean isActive) {
+    public Vector<PriceAlert> findByIsActive(boolean isActive) {
         if (!isActualAlertsList) {
             priceAlerts = priceAlertRepository.findByIsActive(isActive);
             if(priceAlerts != null) isActualAlertsList = true;

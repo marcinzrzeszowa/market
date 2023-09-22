@@ -1,6 +1,7 @@
 package com.mj.market.app.article;
 
 
+import com.mj.market.app.pricealert.PriceAlert;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "article")
-public class Article {
+public class Article implements Comparable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,5 +94,12 @@ public class Article {
                 ", Description='" + Description + '\'' +
                 ", localDate=" + localDate + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Article pa = (Article) o;
+        //revers order
+        return Long.compare(pa.getId(), this.getId());
     }
 }

@@ -52,11 +52,21 @@ class StartupData implements CommandLineRunner {
         userService.saveUser(admin);
         userService.saveUser(user1);
 
+        User ud = userService.findByUsername("admin");
 
-        Symbol btcUsdt = new Symbol("BTC/USDT","BTCUSDT", SymbolType.KRYPTOWALUTA);
-        Symbol ethUsdt  = new Symbol("ETH/USDT","ETHUSDT", SymbolType.KRYPTOWALUTA);
-        Symbol bnbUsdt = new Symbol("BNB/USDT","BNBUSDT", SymbolType.KRYPTOWALUTA);
-        Symbol maticUsdt = new Symbol("MATIC/USDT","MATICUSDT", SymbolType.KRYPTOWALUTA);
+
+        Symbol btcUsdt = new Symbol("Bitcoin/USDT","BTCUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol ethUsdt  = new Symbol("Ethereum/USDT","ETHUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol bnbUsdt = new Symbol("Binance/USDT","BNBUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol maticUsdt = new Symbol("Matic/USDT","MATICUSDT", SymbolType.KRYPTOWALUTA);
+
+        Symbol tether = new Symbol("USD/Tether", "USDTTRY", SymbolType.KRYPTOWALUTA);
+        Symbol solana = new Symbol("Solana/Binance","SOLBUSD", SymbolType.KRYPTOWALUTA);
+        Symbol cardano = new Symbol("Cardano/USDT","ADAUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol zilliqa = new Symbol("Zilliqa/USDT","ZILUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol polkadot = new Symbol("Polkadot/USDT","DOTUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol xrp = new Symbol("XRP/USDT","XRPUSDT", SymbolType.KRYPTOWALUTA);
+        Symbol cosmos = new Symbol("Atom/USDT","ATOMUSDT", SymbolType.KRYPTOWALUTA);
 
         Symbol eurPln = new Symbol("EUR/PLN","EURPLN", SymbolType.WALUTA);
         Symbol usdPln = new Symbol("USD/PLN","USDPLN", SymbolType.WALUTA);
@@ -65,7 +75,7 @@ class StartupData implements CommandLineRunner {
 
         Symbol silverUsd = new Symbol("SREBRO/USD","SREBRO", SymbolType.SUROWIEC);
 
-        symbolService.saveAllSymbols(Arrays.asList(btcUsdt,ethUsdt,bnbUsdt,maticUsdt,eurPln,usdPln,eurUsd,chfPln,silverUsd));
+        symbolService.saveAllSymbols(Arrays.asList(btcUsdt,ethUsdt,bnbUsdt,maticUsdt,eurPln,usdPln,eurUsd,chfPln,silverUsd,tether,solana,cardano,zilliqa,polkadot, xrp, cosmos));
 
         PriceAlert pa1 = PriceAlert.newPriceAlertWithMaxMin(btcUsdt, admin,"Cena BTC poza zakresem cenowym", new BigDecimal(23000), new BigDecimal(16000));
         PriceAlert pa4 = PriceAlert.newPriceAlertWithMax(ethUsdt,admin,"ETH below 20.000", new BigDecimal(20000));

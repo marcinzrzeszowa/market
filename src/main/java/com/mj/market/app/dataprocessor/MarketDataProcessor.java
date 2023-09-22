@@ -8,17 +8,18 @@ import com.mj.market.app.symbol.Symbol;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 
 public class MarketDataProcessor{
-    private final List<SimpleResponseDto> requestObjects;
-    private final Set<PriceAlert> priceAlertsToNotify;
+    private List<SimpleResponseDto> requestObjects;
+    private Set<PriceAlert> priceAlertsToNotify;
     private static final BigDecimal DEFAULT_PRICE_VALUE = BigDecimal.ZERO;
 
 
     public MarketDataProcessor(List<SimpleResponseDto> requestObjects) {
         this.requestObjects = requestObjects;
-        this.priceAlertsToNotify = new HashSet<>();
+        this.priceAlertsToNotify = new CopyOnWriteArraySet();
     }
 
     public Set<PriceAlert> processing(Set<PriceAlert> priceAlerts) {
@@ -62,7 +63,6 @@ public class MarketDataProcessor{
         }
         return marketPriceIsOver;
     }
-
 
     private BigDecimal getApiResponseDtoPrice(Symbol symbol) {
         for (SimpleResponseDto obj : requestObjects) {

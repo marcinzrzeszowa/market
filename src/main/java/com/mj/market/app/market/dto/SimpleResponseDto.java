@@ -9,11 +9,12 @@ import java.math.BigDecimal;
 @Getter
 public class SimpleResponseDto implements ResponseObject{
 
+        private String name;
         private String code;
         private BigDecimal price;
 
     @Override
     public String toString() {
-        return "SimpleResponseDto{code=" + code + ", price=" + price +"}" ;
+        return "SimpleResponseDto{name=" + name + ", price=" + price +"}" ;
     }
 }

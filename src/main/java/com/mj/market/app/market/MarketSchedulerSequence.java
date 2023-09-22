@@ -27,7 +27,7 @@ public abstract class MarketSchedulerSequence {
 
 
     protected final String name;
-    protected Set<SymbolType> supportedSymbolType;
+    protected final Set<SymbolType> supportedSymbolType;
     private Set<Symbol> filteredSymbols;
     private Set<PriceAlert> priceAlertsToNotify;
     private List<SimpleResponseDto> simpleResponseDto;
@@ -68,15 +68,14 @@ public abstract class MarketSchedulerSequence {
                 if(loggerEnable)ColorConsole.printlnGreen("3/4 : Response From: "+ name + " "+ simpleResponseDto.toString());
 
                 //Analise prices and delegates calculations
-                if(simpleResponseDto != null)
+                if(simpleResponseDto != null && !simpleResponseDto.isEmpty())
                     priceAlertsToNotify = marketDataProcessing(simpleResponseDto, getPriceAlertsBySymbolType(filteredSymbols));
-                    if(loggerEnable)ColorConsole.printlnPurple("4/4 Go notify: " + priceAlertsToNotify.toString());
 
                     saveChangesInPriceAlerts(priceAlertsToNotify);
+                    if(priceAlertsToNotify != null && !priceAlertsToNotify.isEmpty())
 
-                    if(priceAlertsToNotify != null)
-
-                        //notify user ba sending message
+                        if(loggerEnable)ColorConsole.printlnPurple("4/4 Go notify: " + priceAlertsToNotify.toString());
+                        //notify user about price changes
                         notifyUser(priceAlertsToNotify);
             }
         }
@@ -85,7 +84,6 @@ public abstract class MarketSchedulerSequence {
     private void saveChangesInPriceAlerts(Set<PriceAlert> priceAlertsToNotify) {
         priceAlertsToNotify.stream().forEach(e->priceAlertService.savePriceAlert(e));
     }
-
 
     private List<PriceAlert> readActiveUserAlerts() {
         boolean getJustActivePriceAlerts = true;
@@ -101,13 +99,14 @@ public abstract class MarketSchedulerSequence {
     }
     protected abstract List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> marketSymbols);
 
-    protected Set<Symbol> getSymbolsSupportedByMarketApi(Set<Symbol> allSymbols){
+    private Set<Symbol> getSymbolsSupportedByMarketApi(Set<Symbol> allSymbols){
        Set<Symbol> result = allSymbols.stream()
                 .filter( e-> supportedSymbolType.contains(e.getType()))
                 .collect(Collectors.toSet());
         return result;
     }
-    protected Set<String> getSymbols(Set<Symbol>symbols){
+
+    private Set<String> getSymbols(Set<Symbol>symbols){
         return symbols.stream()
                 .map(e->e.getCode())
                 .collect(Collectors.toSet());
@@ -121,7 +120,7 @@ public abstract class MarketSchedulerSequence {
         marketDataProcessor = new MarketDataProcessor(requestObjects);
        return marketDataProcessor.processing(priceAlerts);
     }
-    protected Set<Symbol> getAllSymbols(){
+    private Set<Symbol> getAllSymbols(){
         return symbolService.getAllSymbols().stream().collect(Collectors.toSet());
     }
 
@@ -129,11 +128,14 @@ public abstract class MarketSchedulerSequence {
         userNotifier.notify(priceAlertsToNotify);
     }
 
-    protected String getSymbolByCode(String code) {
-        return symbolService.getSymbolsInCorrectFormat(code);
+    protected boolean checkIfSymbolIsValid(String code) {
+        return symbolService.getSymbolByFormat(code);
     }
 
-    protected List<String> getValidSymbolCodes(Set<String> allSymbols){
-        return symbolService.getSymbolsInCorrectFormat(allSymbols);
+    protected Set<String> getAllSymbolsSupportedByMarketApi() {
+        Set<Symbol> allSymbols = getAllSymbols();
+        Set<Symbol> filteredSymbols  = getSymbolsSupportedByMarketApi(allSymbols);
+        Set<String> strSymbols = getSymbols(filteredSymbols);
+        return strSymbols;
     }
 }

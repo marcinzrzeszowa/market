@@ -29,6 +29,8 @@ public class SecurityConfiguration {
 
                 .authorizeHttpRequests()
                 .anyRequest().permitAll()
+                .and()
+                .httpBasic()
 
                 .and()
                 .authenticationProvider(authenticationProvider)

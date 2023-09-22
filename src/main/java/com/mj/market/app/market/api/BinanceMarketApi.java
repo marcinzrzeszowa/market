@@ -1,6 +1,6 @@
 package com.mj.market.app.market.api;
 
-import com.mj.market.app.DateTime;
+import com.mj.market.config.DateTime;
 import com.mj.market.app.notifier.EmailService;
 import com.mj.market.app.market.MarketSchedulerSequence;
 import com.mj.market.app.market.dto.ObjectMapper;
@@ -41,24 +41,26 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
 
     @Override
     public List<SimpleResponseDto> getAllPrices(){
-        Set<Symbol> allSymbols = super.getAllSymbols();
-        Set<Symbol> symbols  = super.getSymbolsSupportedByMarketApi(allSymbols);
-        Set<String> strSymbols = super.getSymbols(symbols);
-        return getPrices(strSymbols);
-    }
-
-    public List<SimpleResponseDto> getPrices(Set<String> symbols) {
-        List<String> supportedSymbolCodes = super.getValidSymbolCodes(symbols);
-        String url= buildMultiSimpleSymbolsUrl(supportedSymbolCodes);
-        SimpleRequestDto[] objArray= getRequestObjFromMarketApi(SimpleRequestDto[].class, url);
-        if(objArray == null) return new LinkedList<>();
-        return ObjectMapper.valueOfSimpleResponseDtoList(objArray);
+        Set<String> strSymbols = super.getAllSymbolsSupportedByMarketApi();
+        SimpleRequestDto[] requestDto = getPrices(strSymbols);
+        List<SimpleResponseDto> response = ObjectMapper.valueOfSimpleResponseDtoList(requestDto);
+        return response;
     }
 
     @Override
+    public SimpleRequestDto[] getPrices(Set<String> filteredSymbols) {
+        List<String> filteredSymbolsList = filteredSymbols.stream().toList();
+        String url= buildMultiSimpleSymbolsUrl(filteredSymbolsList);
+        SimpleRequestDto[] objArray= getRequestObjFromMarketApi(SimpleRequestDto[].class, url);
+        if(objArray == null) return new SimpleRequestDto[0];
+        return objArray;
+    }
+
+    //TODO add to website in details
+    @Override
     public List<ResponseDto> getDetailPriceHistory(String symbol, Interval interval, LocalDateTime startDate, LocalDateTime endDate, int limit){
-        if(symbol == null) throw new IllegalArgumentException();
-        if(!getSymbolByCode(symbol).equals(symbol)) throw new IllegalArgumentException();
+        boolean isValidSymbol = super.checkIfSymbolIsValid(symbol);
+        if(symbol == null || !isValidSymbol) throw new IllegalArgumentException();
 
         String url = buildSymbolUrl(symbol, interval, startDate, endDate, limit);
         String[][] str2dArray = getRequestObjFromMarketApi(String[][].class, url);
@@ -67,11 +69,13 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     }
 
     @Override
-    protected List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> symbols) {
-        Set<String> set = symbols.stream()
+    protected List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> filteredSymbols) {
+        Set<String> symbolsStr = filteredSymbols.stream()
                 .map(e -> e.getCode())
                 .collect(Collectors.toSet());
-        return getPrices(set);
+        SimpleRequestDto[] requestDto = getPrices(symbolsStr);
+        List<SimpleResponseDto> response = ObjectMapper.valueOfSimpleResponseDtoList(requestDto);
+        return response;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         long unixEndTime = DateTime.toUnixTime(endDate);
 
         StringBuilder url = new StringBuilder();
-        url
+                 url
                 .append(URL_PRICE).append(symbol)
                 .append(INTERVAL).append(interval.code)
                 .append(START_TIME).append(unixStartTime)

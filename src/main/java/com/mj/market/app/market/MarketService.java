@@ -1,6 +1,6 @@
 package com.mj.market.app.market;
 
-import com.mj.market.app.DateTime;
+import com.mj.market.config.DateTime;
 import com.mj.market.app.market.api.Interval;
 import com.mj.market.app.market.api.MarketApi;
 import com.mj.market.app.market.dto.ResponseDto;

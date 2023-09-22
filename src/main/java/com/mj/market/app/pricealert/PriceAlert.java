@@ -161,7 +161,6 @@ public class PriceAlert {
         this.communicate = communicate;
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(id, description, maxPrice, minPrice, isActive, relatedAlertId, communicate, symbol, user);
@@ -188,5 +187,4 @@ public class PriceAlert {
                 " " + communicate +
                 '}'+"\n";
     }
-
 }
