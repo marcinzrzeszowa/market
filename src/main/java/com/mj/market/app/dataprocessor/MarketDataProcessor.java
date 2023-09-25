@@ -24,13 +24,15 @@ public class MarketDataProcessor{
 
     public Set<PriceAlert> processing(Set<PriceAlert> priceAlerts) {
         ListIterator<PriceAlert> priceAlertsIter = priceAlerts.stream().toList().listIterator();
+        String communicate = "Market price of pair: %s is %f and is %s than price %f in alert";
+
         while (priceAlertsIter.hasNext()) {
             PriceAlert priceAlert = priceAlertsIter.next();
             BigDecimal marketPrice = getApiResponseDtoPrice(priceAlert.getSymbol());
-            String communicate = "Market price of pair: %s is %f and is %s than price %f in alert";
 
             if (checkIfMarketPriceIsOver(priceAlert, marketPrice)) {
                 changePriceAlertStatus(priceAlert, communicate.formatted(priceAlert.getSymbol(), marketPrice, "higher", priceAlert.getMinPrice()));
+
             } else if (checkIfMarketPriceIsBelow(priceAlert, marketPrice)) {
                 changePriceAlertStatus(priceAlert, communicate.formatted(priceAlert.getSymbol(), marketPrice, "lower", priceAlert.getMinPrice()));
             }

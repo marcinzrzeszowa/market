@@ -32,7 +32,7 @@ public class BankierMarketApi extends MarketSchedulerSequence implements MarketA
 
     private static final EnumSet<SymbolType> handledSymbols = EnumSet.of(SymbolType.KRYPTOWALUTA);
 
-    //TODO
+    //TODO add  API to scheduled tasks after completed Binance API
     public static final String EURPLN = "https://www.bankier.pl/waluty/kursy-walut/forex/EURPLN";
     public static final String USDPLN ="https://www.bankier.pl/waluty/kursy-walut/forex/USDPLN";
     public static final String EURUSD ="https://www.bankier.pl/waluty/kursy-walut/forex/EURUSD";

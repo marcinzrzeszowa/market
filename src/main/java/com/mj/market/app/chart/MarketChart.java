@@ -18,7 +18,7 @@ import java.util.List;
 public class MarketChart {
 /*
 
-    //TODO
+    //TODO add Chart to stock prices
     private final MarketService marketService;
     private String chart;
 

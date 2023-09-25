@@ -40,8 +40,9 @@ public class MarketService{
     private List<SimpleResponseDto> getAllPricesByMarketApi() {
         List<SimpleResponseDto> aggregatedPriceAlerstsList = new LinkedList<>();
 
-        aggregatedPriceAlerstsList.addAll(cryptoMarketApi.getAllPrices());
         //TODO add FIAT
+        aggregatedPriceAlerstsList.addAll(cryptoMarketApi.getAllPrices());
+
 
         return aggregatedPriceAlerstsList;
     }

@@ -17,6 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
+    //TODO change non-functional JWT authentication to simple authentication
+
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;

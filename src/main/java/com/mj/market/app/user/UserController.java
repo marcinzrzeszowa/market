@@ -22,7 +22,6 @@ public class UserController {
     private final UserValidator userValidator;
 
 
-
     @PostMapping("/reg")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(userService.register(request));
@@ -32,7 +31,6 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(userService.authenticate(request));
     }
-
 
 
     @GetMapping("/login")

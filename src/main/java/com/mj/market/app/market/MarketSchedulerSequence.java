@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
 public abstract class MarketSchedulerSequence {
     private static MarketDataProcessor marketDataProcessor;
     private static SymbolService symbolService;
