@@ -9,9 +9,9 @@
     <form method="post" th:object="${alertForm}">
         <fieldset>
             <label>Symbol kursu
-                <select th:field="*{ticker}">
-                    <option th:value="*{ticker}" th:text="*{ticker.getName()}" selected></option>
-                        <option th:each="obj: ${tickers}"
+                <select th:field="*{symbol}">
+                    <option th:value="*{symbol}" th:text="*{symbol.getName()}" selected></option>
+                        <option th:each="obj: ${symbols}"
                                 th:value="${obj.getId()}"
                                 th:text="${obj.getName()}">
                         </option>

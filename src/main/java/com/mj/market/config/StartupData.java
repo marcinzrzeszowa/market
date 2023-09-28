@@ -13,25 +13,25 @@ import com.mj.market.app.user.User;
 import com.mj.market.app.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static com.mj.market.config.Config.passwordEncoder;
 
 @Component
 @AllArgsConstructor
 class StartupData implements CommandLineRunner {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
     private final ArticleService articleService;
     private final SymbolService symbolService;
     private final PriceAlertService priceAlertService;
 
     @Override
     public void run(String... args) throws Exception {
-
           loadArticles();
           Load();
     }
@@ -41,18 +41,16 @@ class StartupData implements CommandLineRunner {
                 .username("admin")
                 .email("marcinzbrzozowa@gmail.com")
                 .role(Role.ADMIN)
-                .password(passwordEncoder().encode("123"))
+                .password(passwordEncoder.encode("123"))
                 .build();
         User user1 = User.builder()
                 .username("user")
                 .email("marcinzbrzozowa@gmail.com")
                 .role(Role.USER)
-                .password(passwordEncoder().encode("user"))
+                .password(passwordEncoder.encode("user"))
                 .build();
         userService.saveUser(admin);
         userService.saveUser(user1);
-
-        User ud = userService.findByUsername("admin");
 
 
         Symbol btcUsdt = new Symbol("Bitcoin/USDT","BTCUSDT", SymbolType.KRYPTOWALUTA);

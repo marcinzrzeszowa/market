@@ -23,7 +23,7 @@
             </tr>
             <tr th:each="alert: ${alerts}">
                 <td th:text="${alert.getId()}"/>
-                <td th:text="${alert.getTicker().getName()}"/>
+                <td th:text="${alert.getSymbol().getName()}"/>
                 <td th:text="${alert.getDescription()}"/>
                 <td th:text="${alert.getMaxPrice() == 0 ? ' - ' : alert.getMaxPrice()}"/>
                 <td th:text="${alert.getMinPrice() == 0 ? ' - ' : alert.getMinPrice()}"/>

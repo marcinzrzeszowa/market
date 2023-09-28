@@ -1,6 +1,16 @@
 package com.mj.market.app.user;
 
 public enum Role {
-    USER,
-    ADMIN
+    USER("USER"),
+    ADMIN("ADMIN");
+
+    private String name;
+
+    Role(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

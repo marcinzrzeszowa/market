@@ -22,16 +22,6 @@ public class UserController {
     private final UserValidator userValidator;
 
 
-    @PostMapping("/reg")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(userService.register(request));
-    }
-
-    @PostMapping("/auth")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        return ResponseEntity.ok(userService.authenticate(request));
-    }
-
 
     @GetMapping("/login")
     public String login(Model model, String error){

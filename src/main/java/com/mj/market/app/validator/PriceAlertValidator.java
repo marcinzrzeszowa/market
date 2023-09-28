@@ -31,7 +31,7 @@ public class PriceAlertValidator implements Validator {
 
         PriceAlert priceAlert = (PriceAlert) target;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ticker", "error.price-alert.ticker");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "symbol", "error.price-alert.symbol");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "error.price-alert.description");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "maxPrice", "error.price-alert.maxPrice");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "minPrice", "error.price-alert.minPrice");

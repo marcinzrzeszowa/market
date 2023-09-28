@@ -9,13 +9,13 @@
     <form method="post" th:object="${alertForm}">
         <fieldset>
             <label>Symbol kursu
-                <select th:field="*{ticker}" name="ticker">
-                    <option th:each="obj: ${tickers}"
+                <select th:field="*{symbol}" name="symbol">
+                    <option th:each="obj: ${symbols}"
                             th:value="${obj.getId()}"
                             th:text="${obj.getName()}">
                     </option>
                 </select>
-                <p th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}"></p>
+                <p th:if="${#fields.hasErrors('symbol')}" th:errors="*{symbol}"></p>
             </label>
             <label>Opis
                 <input type="text" th:field="*{description}" name="description"/>

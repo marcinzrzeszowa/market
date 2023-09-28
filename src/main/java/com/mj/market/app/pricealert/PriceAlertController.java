@@ -1,6 +1,7 @@
 package com.mj.market.app.pricealert;
 
 import com.mj.market.app.symbol.Symbol;
+import com.mj.market.app.user.Role;
 import com.mj.market.app.user.User;
 import com.mj.market.app.user.UserService;
 import com.mj.market.app.validator.PriceAlertValidator;
@@ -36,7 +37,7 @@ public class PriceAlertController {
     @GetMapping("/alerts")
     public String showUserAlerts(Model model, Authentication authentication){
         User user = userService.findByUsername(authentication.getName());
-        if(user.getRole().equals("ROLE_ADMIN")){
+        if(user.getRole().equals(Role.ADMIN)){
             model.addAttribute("alerts", priceAlertService.readAllPriceAlerts());
             return "price_alerts";
         }
@@ -49,9 +50,9 @@ public class PriceAlertController {
             User user = userService.findByUsername(authentication.getName());
             PriceAlert priceAlert = new PriceAlert();
             priceAlert.setUser(user);
-            List<Symbol> tickers = priceAlertService.getSymbols();
+            List<Symbol> symbols = priceAlertService.getSymbols();
                 model.addAttribute("alertForm", priceAlert);
-                model.addAttribute("tickers", tickers);
+                model.addAttribute("symbols", symbols);
         return "price_alert_new";
     }
 
@@ -60,9 +61,9 @@ public class PriceAlertController {
         priceAlertValidator.validate(priceAlert, bindingResult);
             if(bindingResult.hasErrors()){
                 logger.error(String.valueOf(bindingResult.getFieldError()));
-                List<Symbol> tickers = priceAlertService.getSymbols();
+                List<Symbol> symbols = priceAlertService.getSymbols();
                 model.addAttribute("alertForm", priceAlert);
-                model.addAttribute("tickers", tickers);
+                model.addAttribute("symbols", symbols);
                 return "price_alert_new";
             }
             priceAlertService.savePriceAlert(priceAlert);
@@ -74,10 +75,10 @@ public class PriceAlertController {
     public String editAlert(@PathVariable("id") Long id,
                             Model model){
         PriceAlert alert = priceAlertService.findById(id);
-        List<Symbol> tickers = priceAlertService.getSymbols();
+        List<Symbol> symbols = priceAlertService.getSymbols();
         if (alert != null){
             model.addAttribute("alertForm", alert);
-            model.addAttribute("tickers", tickers);
+            model.addAttribute("symbols", symbols);
             return "price_alert";
         }else {
             return "error/404";
