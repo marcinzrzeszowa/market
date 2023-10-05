@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="~{fragments/header :: headerCss}">
+</head>
+
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div th:class="content">
+    <div class="articleShort">
+    <h4>Notowania giełdowe <img th:src="@{/chart.png}" width="30px" /></h4>
+    <br>
+<table>
+    <tr>
+        <th>Nazwa</th>
+        <th>Cena</th>
+        <th>Symbol</th>
+       <!-- <th sec:authorize="isAuthenticated()">Alert Użytkownika</th>-->
+    </tr>
+    <tr th:each="symbol: ${symbols}">
+        <td th:text="${symbol.getName()} ?: 'null'"/>
+        <bolt><td th:text="${symbol.getPrice()}" th:style="'color: blue;'"/></bolt>
+        <td th:text="${symbol.getCode()} ?: 'null'"/>
+
+
+
+<!--        <td th:text="${stock.getChangeInPercent() +' %'}" th:style="${stockElement.getChangeInPercent() > 0 ? 'color: green;' : 'color: red;'}"/>
+        <td th:text="${stock.getChangeFromAvg50InPercent() +' %'}" th:style="${stockElement.getChangeFromAvg50InPercent()  > 0 ? 'color: green;' : 'color: red;'}"/>
+        <td th:text="${stock.getChangeFromAvg200InPercent() +' %'}" th:style="${stockElement.getChangeFromAvg200InPercent() > 0 ? 'color: green;' : 'color: red;'}"/>-->
+     <!--   <td sec:authorize="isAuthenticated()" >
+            <a sec:authorize="isAuthenticated()"  th:href="@{'/stocks/{ticker}'(ticker=${stockElement.getSymbol()})}">Dodaj</a>
+        </td>-->
+    </tr>
+</table></div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

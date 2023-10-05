@@ -1,10 +1,13 @@
 package com.mj.market.config;
 
 import com.mj.market.app.user.CustomUserDetailsService;
+import com.mj.market.app.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +30,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    //TODO custom Authority Provider impl
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -35,26 +39,35 @@ public class SecurityConfiguration {
         return daoAuthenticationProvider;
     }
 
-    //TODO change
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http
-                .authorizeHttpRequests()
-                .anyRequest().permitAll()
-                .and().httpBasic()
-                .and()
-                .authenticationProvider(authenticationProvider())
-                .formLogin()
-                .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password")
-                .defaultSuccessUrl("/home")
-                .loginPage("/login").permitAll()
-                .and().rememberMe()
-                .and().logout().logoutUrl("/logout")
-                .deleteCookies("JSESSIONID","remember-me" )
-                .logoutSuccessUrl("/home");
+    private static final String[] AUTHENTICATED_ENDPOINTS = {
+            "/alerts", "/user", "/articles/new", "/price_alerts", "/price_alert_new", "/price_alert"};
 
+    @Bean
+    public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+        http
+                .authenticationProvider(authenticationProvider())
+                .csrf(Customizer.withDefaults())
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.POST, "/articles").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE,"/articles").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/users","/register").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(AUTHENTICATED_ENDPOINTS).authenticated()
+                        .anyRequest().permitAll()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults())
+                .formLogin(formLogin -> formLogin
+                            .loginProcessingUrl("/login")
+                            .usernameParameter("username")
+                            .passwordParameter("password")
+                            .loginPage("/login")
+                            .defaultSuccessUrl("/home")
+                            .permitAll())
+                .logout(logout -> logout
+                            .logoutUrl("/home")
+                            .permitAll()
+
+        );
         return http.build();
     }
-
 }

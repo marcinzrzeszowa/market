@@ -19,6 +19,7 @@ public class SymbolService {
     private void createValidSymbolsFormats() {
         this.validSymbolFormats = getAllSymbols();
     }
+
     public void saveAllSymbols(List<Symbol> list) {
         symbolRepository.saveAll(list);
         refreshValidSymbolFormats();
@@ -28,7 +29,7 @@ public class SymbolService {
         createValidSymbolsFormats();
     }
 
-    private Symbol findByCode(String code){
+    public Symbol getSymbolByCode(String code){
         Symbol result = validSymbolFormats.stream()
                 .filter(e->e.getCode().equals(code))
                 .findAny().get();
@@ -39,8 +40,8 @@ public class SymbolService {
         return symbolRepository.findAll();
     }
 
-    public boolean getSymbolByFormat(String code) {
-        return (findByCode(code) != null)? true : false;
+    public boolean isSymbolByFormat(String code) {
+        return (getSymbolByCode(code) != null)? true : false;
     }
 
 

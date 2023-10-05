@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,7 +38,6 @@ public class PriceAlertService implements PriceAlertObservable{
     public List<PriceAlert> readUserPriceAlerts(Long id){
         return priceAlertRepository.findByUserId(id);
     }
-
 
     public void savePriceAlert(PriceAlert priceAlert) {
         priceAlertRepository.save(priceAlert);

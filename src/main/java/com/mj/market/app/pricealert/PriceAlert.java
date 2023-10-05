@@ -47,7 +47,6 @@ public class PriceAlert {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     @Transient
     private static final BigDecimal defaultMinPrice = BigDecimal.ZERO;
     @Transient

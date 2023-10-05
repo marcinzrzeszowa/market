@@ -8,7 +8,6 @@ import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
 import com.mj.market.config.ColorConsole;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -104,6 +103,10 @@ public abstract class MarketSchedulerSequence {
                 .collect(Collectors.toSet());
         return result;
     }
+    protected Set<Symbol> getAllSymbolsSupportedByMarketApi() {
+        Set<Symbol> allSymbols = getAllSymbols();
+        return getSymbolsSupportedByMarketApi(allSymbols);
+    }
 
     private Set<String> getSymbols(Set<Symbol>symbols){
         return symbols.stream()
@@ -128,13 +131,8 @@ public abstract class MarketSchedulerSequence {
     }
 
     protected boolean checkIfSymbolIsValid(String code) {
-        return symbolService.getSymbolByFormat(code);
+        return symbolService.isSymbolByFormat(code);
     }
 
-    protected Set<String> getAllSymbolsSupportedByMarketApi() {
-        Set<Symbol> allSymbols = getAllSymbols();
-        Set<Symbol> filteredSymbols  = getSymbolsSupportedByMarketApi(allSymbols);
-        Set<String> strSymbols = getSymbols(filteredSymbols);
-        return strSymbols;
-    }
+
 }

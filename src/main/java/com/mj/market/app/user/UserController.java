@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserValidator userValidator;
+    private final PasswordEncoder passwordEncoder;
 
 
 
@@ -27,6 +29,14 @@ public class UserController {
     public String login(Model model, String error){
         if (error != null){
             model.addAttribute("error", "Podaj poprawny Login i hasło");
+        }
+        return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(Model model, String error){
+        if (error != null){
+            model.addAttribute("error", "Nie wylogowano");
         }
         return "login";
     }
@@ -45,6 +55,9 @@ public class UserController {
             logger.error(String.valueOf(bindingResult.getFieldError()));
             return "register";
         }
+        String codedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(codedPassword);
+        user.setRole(Role.USER);
         userService.saveUser(user);
         return "redirect:/users";
     }

@@ -15,11 +15,16 @@ public interface PriceAlertRepository extends JpaRepository<PriceAlert, Long> {
     @Query(nativeQuery = true, value ="select * from price_alert Where is_active= :active")
     Vector<PriceAlert> findByIsActive(@Param("active") boolean isActive);
 
-    @Query(nativeQuery = true,
-            value ="select * from price_alert pa " +
-                    "left join app_user u ON pa.user_id = u.id " +
-                    "Where u.id = :id")
-    Vector<PriceAlert> findByUserId(@Param("id") Long id);
+ /*   @Query(nativeQuery = true, value ="SELECT * FROM price_alert pa LEFT JOIN app_user u " +
+            "ON pa.user_id = u.id " +
+            "WHERE pa.user_id = :id_param")
+    Vector<PriceAlert> findByUserId(@Param("id_param") Long id);*/
+
+    @Query(nativeQuery = true, value ="SELECT pa.* " +
+            "FROM price_alert pa LEFT JOIN app_user u " +
+            "ON pa.user_id = u.id " +
+            "WHERE pa.user_id = :id_param")
+    Vector<PriceAlert> findByUserId(@Param("id_param") Long id);
 
    /* @Query(nativeQuery = true, value ="select * from price_alert p left join user u ON p.user_id = u.id Where u.id = :id And p.is_active = true")
     List<PriceAlert> findByUserIdAndIsActive(@Param("id") Long id);*/

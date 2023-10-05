@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 
-@AllArgsConstructor
+
 @Getter
 public class SimpleResponseDto implements ResponseObject{
 
@@ -13,8 +13,14 @@ public class SimpleResponseDto implements ResponseObject{
         private String code;
         private BigDecimal price;
 
+    public SimpleResponseDto(String name, String code, BigDecimal price) {
+        this.name = name;
+        this.code = code;
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        return "SimpleResponseDto{name=" + name + ", price=" + price +"}" ;
+        return "SimpleResponseDto{" + "name='" + name   + ", price=" + price + '}';
     }
 }

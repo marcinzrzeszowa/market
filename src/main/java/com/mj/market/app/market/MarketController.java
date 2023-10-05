@@ -26,25 +26,21 @@ public class MarketController {
     }
 
 
-    @GetMapping(value = {"/stocks"})
-    public String getAvailableStocks(Model model){
-        model.addAttribute("stocks",  marketService.getAllPrices());
-        return "stocks";
+    @GetMapping(value = {"/symbols"})
+    public String getSymbolsPrice(Model model){
+        model.addAttribute("symbols",  marketService.getAllPrices());
+        return "symbols";
     }
 
-    @GetMapping("/prices")
-    public List<SimpleResponseDto> getAllPrices(){
-       return marketService.getAllPrices();
-    }
-
-    @GetMapping("/price/{symbol}")
-    public List<ResponseDto> getPriceDetails(
+    @GetMapping("/symbols/{code}")
+    public String getPriceDetails(
             @PathVariable String symbol,
             @RequestParam String interval,
             @RequestParam String beginDateTime,
             @RequestParam String finishDateTime,
-            @RequestParam String limit){
-        return marketService.getPriceDetails(symbol,interval,beginDateTime,finishDateTime,limit);
+            @RequestParam String limit, Model model){
+        model.addAttribute("symbol",  marketService.getPriceDetails(symbol,interval,beginDateTime,finishDateTime,limit));
+        return "symbolDetails";
     }
 /*
 

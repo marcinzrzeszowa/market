@@ -12,16 +12,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name ="User")
+@Entity
 @Table(name="app_user")
 public class User implements UserDetails{
 
@@ -52,8 +49,9 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> simpleGrantedAuthorityList;
-        return Collections.singleton(new SimpleGrantedAuthority(getRole().name()));
+        List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
+        simpleGrantedAuthorityList.add(new SimpleGrantedAuthority(getRole().name()));
+        return simpleGrantedAuthorityList;
     }
     @Override
     public String getPassword() {

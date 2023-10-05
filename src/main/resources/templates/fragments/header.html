@@ -31,20 +31,24 @@
                     <a th:href="@{/home}">Start</a>
                 </li>
                 <li>
-                    <a th:href="@{/stocks}">Notowania giełdowe</a>
+                    <a th:href="@{/symbols}">Notowania giełdowe</a>
                 </li>
                 <li>
                     <a th:href="@{/alerts}"  sec:authorize="isAuthenticated()">Alerty</a>
                 </li>
                 <li>
-                    <a th:href="@{/users}" sec:authorize="hasRole('ADMIN')" th:text="Użytkownicy" />
+                    <div sec:authorize="isAuthenticated()">
+                        <a th:href="@{/users}" sec:authorize="hasRole('ADMIN')" th:text="Użytkownicy" />
+                    </div>
+
                 </li>
             </ul>
             <ul>
                 <li>
                     <div th:class="AuthMenu">
-                        <div sec:authorize="isAuthenticated()" sec:authentication="name"> </div>
+                        <div sec:authorize="isAuthenticated()" sec:authentication="name">
                     <a th:href="@{/logout}"  sec:authorize="isAuthenticated()" th:text="Wyloguj" />
+                        </div>
                     <a th:href="@{/login}"  sec:authorize="isAnonymous()" th:text="Logowanie" />
                     </div>
                 </li>

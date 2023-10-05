@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 @Qualifier("BankierMarketApi")
 public class BankierMarketApi extends MarketSchedulerSequence implements MarketApi {
 
+    private record RawAttribute(String name, String startReqex, String endRegex){}
 
     private static final EnumSet<SymbolType> handledSymbols = EnumSet.of(SymbolType.KRYPTOWALUTA);
 
@@ -175,50 +176,13 @@ public class BankierMarketApi extends MarketSchedulerSequence implements MarketA
     }
 
     @Override
-    public SimpleRequestDto[] getPrices(Set<String> symbols) {
+    public SimpleRequestDto[] getPrices(Set<Symbol> symbols) {
         return null;
     }
 
     @Override
     public List<ResponseDto> getDetailPriceHistory(String symbol, Interval interval, LocalDateTime startDate, LocalDateTime endDate, int limit) {
         return null;
-    }
-
-
-    private static class RawAttribute {
-        String name;
-        String startReqex;
-        String endRegex;
-
-        public RawAttribute(String name, String startReqex, String endRegex) {
-            this.name = name;
-            this.startReqex = startReqex;
-            this.endRegex = endRegex;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getStartReqex() {
-            return startReqex;
-        }
-
-        public void setStartReqex(String startReqex) {
-            this.startReqex = startReqex;
-        }
-
-        public String getEndRegex() {
-            return endRegex;
-        }
-
-        public void setEndRegex(String endRegex) {
-            this.endRegex = endRegex;
-        }
     }
 
 }

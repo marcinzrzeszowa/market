@@ -41,15 +41,17 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
 
     @Override
     public List<SimpleResponseDto> getAllPrices(){
-        Set<String> strSymbols = super.getAllSymbolsSupportedByMarketApi();
-        SimpleRequestDto[] requestDto = getPrices(strSymbols);
-        List<SimpleResponseDto> response = ObjectMapper.valueOfSimpleResponseDtoList(requestDto);
+        Set<Symbol> symbols = super.getAllSymbolsSupportedByMarketApi();
+        SimpleRequestDto[] requestDto = getPrices(symbols);
+        List<SimpleResponseDto> response = ObjectMapper.valueOfSimpleResponseDTOList(requestDto, symbols);
         return response;
     }
 
     @Override
-    public SimpleRequestDto[] getPrices(Set<String> filteredSymbols) {
-        List<String> filteredSymbolsList = filteredSymbols.stream().toList();
+    public SimpleRequestDto[] getPrices(Set<Symbol> filteredSymbols) {
+        List<String> filteredSymbolsList = filteredSymbols.stream()
+                .map(e-> e.getCode())
+                .collect(Collectors.toList());
         String url= buildMultiSimpleSymbolsUrl(filteredSymbolsList);
         SimpleRequestDto[] objArray= getRequestObjFromMarketApi(SimpleRequestDto[].class, url);
         if(objArray == null) return new SimpleRequestDto[0];
@@ -69,12 +71,9 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     }
 
     @Override
-    protected List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> filteredSymbols) {
-        Set<String> symbolsStr = filteredSymbols.stream()
-                .map(e -> e.getCode())
-                .collect(Collectors.toSet());
+    protected List<SimpleResponseDto> requestPricesForScheduler(Set<Symbol> symbolsStr) {
         SimpleRequestDto[] requestDto = getPrices(symbolsStr);
-        List<SimpleResponseDto> response = ObjectMapper.valueOfSimpleResponseDtoList(requestDto);
+        List<SimpleResponseDto> response = ObjectMapper.valueOfSimpleResponseDTOList(requestDto,symbolsStr);
         return response;
     }
 
