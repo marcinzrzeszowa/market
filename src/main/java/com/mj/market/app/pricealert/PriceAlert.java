@@ -2,9 +2,9 @@ package com.mj.market.app.pricealert;
 
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.user.User;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -162,7 +162,7 @@ public class PriceAlert {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, maxPrice, minPrice, isActive, relatedAlertId, communicate, symbol, user);
+        return Objects.hash(id, symbol, description, maxPrice, minPrice);
     }
 
     @Override

@@ -2,9 +2,10 @@ package com.mj.market.app.symbol;
 
 
 import com.mj.market.app.pricealert.PriceAlert;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity(name="Symbol")

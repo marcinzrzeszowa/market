@@ -37,19 +37,17 @@
                     <a th:href="@{/alerts}"  sec:authorize="isAuthenticated()">Alerty</a>
                 </li>
                 <li>
-                    <div sec:authorize="isAuthenticated()">
-                        <a th:href="@{/users}" sec:authorize="hasRole('ADMIN')" th:text="Użytkownicy" />
+                    <div sec:authorize="hasRole('ADMIN')" >
+                        <a th:href="@{/users}"th:text="Użytkownicy" />
                     </div>
-
                 </li>
             </ul>
             <ul>
                 <li>
                     <div th:class="AuthMenu">
-                        <div sec:authorize="isAuthenticated()" sec:authentication="name">
-                    <a th:href="@{/logout}"  sec:authorize="isAuthenticated()" th:text="Wyloguj" />
-                        </div>
-                    <a th:href="@{/login}"  sec:authorize="isAnonymous()" th:text="Logowanie" />
+                        <div sec:authorize="isAuthenticated()" sec:authentication="name"> </div>
+                        <a th:href="@{/logout}"  sec:authorize="isAuthenticated()" th:text="Wyloguj" />
+                        <a th:href="@{/login}"  sec:authorize="isAnonymous()" th:text="Logowanie" />
                     </div>
                 </li>
             </ul>

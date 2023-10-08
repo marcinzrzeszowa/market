@@ -5,7 +5,6 @@ import com.mj.market.app.user.Role;
 import com.mj.market.app.user.User;
 import com.mj.market.app.user.UserService;
 import com.mj.market.app.validator.PriceAlertValidator;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
