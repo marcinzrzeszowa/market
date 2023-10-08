@@ -9,6 +9,7 @@ import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
 import com.mj.market.config.ColorConsole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

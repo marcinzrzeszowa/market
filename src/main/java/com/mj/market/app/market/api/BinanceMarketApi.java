@@ -1,5 +1,6 @@
 package com.mj.market.app.market.api;
 
+import com.mj.market.app.notifier.UserNotifier;
 import com.mj.market.config.DateTime;
 import com.mj.market.app.notifier.EmailService;
 import com.mj.market.app.market.MarketSchedulerSequence;
@@ -35,8 +36,8 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
     private final static String START_TIME = "&startTime=";
     private final static String END_TIME = "&endTime=";
 
-    public BinanceMarketApi(PriceAlertService priceAlertService, SymbolService symbolService, EmailService emailService) {
-        super("BinanceMarketApi", priceAlertService, symbolService, emailService);
+    public BinanceMarketApi(PriceAlertService priceAlertService, SymbolService symbolService, @Qualifier("EmailNotifier") UserNotifier userNotifier) {
+        super("BinanceMarketApi", priceAlertService, symbolService, userNotifier);
     }
 
     @Override
