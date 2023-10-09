@@ -21,6 +21,7 @@
                 <input type="text" th:field="*{email}"/>
             </label>
             <input type="submit" th:action="@{'/user/{id}' (id=${user.getId()})}" th:value="Zapisz"  />
+            <a href="/users"/>Wstecz</a>
         </fieldset>
     </form>
     </div>

@@ -1,5 +1,9 @@
 package com.mj.market.app.user;
 
+import com.mj.market.app.notifier.EmailService;
+import com.mj.market.app.user.registration.RegistrationToken;
+import com.mj.market.app.user.registration.RegistrationTokenRepository;
+import com.mj.market.app.user.registration.RegistrationTokenService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,14 +15,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RegistrationTokenService registrationTokenService;
+    private final EmailService emailService;
 
     public User findByUsername(String username) throws UsernameNotFoundException{
         return userRepository.findByUsername(username);
@@ -52,5 +62,20 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public void register(User user) {
+        String codedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(codedPassword);
+        user.setRole(Role.USER);
+        saveUser(user);
+
+        RegistrationToken token = registrationTokenService.createRegistrationToken(user);
+        emailService.sendRegistrationToken(token);
+    }
+
+    public void enableUser(User user){
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 }

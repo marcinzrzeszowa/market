@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="~{fragments/header :: headerCss}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:class="content">
+    <div class="articleShort">
+        <h4>Alerty</h4>
+        <p><a th:href="@{'/alerts/new'}">Nowy alert cenowy</a></p>
+        <table>
+            <tr>
+                <th>Lp</th>
+                <th>Symbol</th>
+                <th>Komunikat</th>
+                <th>Cena max</th>
+                <th>Cena min</th>
+                <th>Aktywny</th>
+                <th sec:authorize="hasRole('ADMIN')">Użytkownik</th>
+                <th>Edytuj</th>
+                <th>Usuń</th>
+            </tr>
+            <tr th:each="alert: ${alerts}">
+                <td th:text="${alert.getId()}"/>
+                <td th:text="${alert.getSymbol().getName()}"/>
+                <td th:text="${alert.getDescription()}"/>
+                <td th:text="${alert.getMaxPrice() == 0 ? ' - ' : alert.getMaxPrice()}"/>
+                <td th:text="${alert.getMinPrice() == 0 ? ' - ' : alert.getMinPrice()}"/>
+                <td th:text="${alert.getActive()}"/>
+                <td sec:authorize="hasRole('ADMIN')" th:text="${alert.getUser().getUsername()}"/>
+
+                <td><a th:href="@{'/alerts/edit/{id}'(id=${alert.getId()})}">Edytuj</a></td>
+                <td><a th:href="@{'/alerts/delete/{id}'(id=${alert.getId()})}">Usuń</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

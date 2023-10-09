@@ -37,7 +37,7 @@ public class PriceAlertController {
     @GetMapping("/alerts")
     public String showUserAlerts(Model model, Authentication authentication){
         User user = userService.findByUsername(authentication.getName());
-        if(user.getRole().equals(Role.ADMIN)){
+        if(user.getRole().equals(Role.ROLE_ADMIN)){
             model.addAttribute("alerts", priceAlertService.readAllPriceAlerts());
             return "price_alerts";
         }
@@ -46,7 +46,7 @@ public class PriceAlertController {
     }
 
     @GetMapping("/alerts/new")
-    public String newAlert( Model model, Authentication authentication) {
+    public String newAlert(Model model, Authentication authentication) {
             User user = userService.findByUsername(authentication.getName());
             PriceAlert priceAlert = new PriceAlert();
             priceAlert.setUser(user);
@@ -72,8 +72,7 @@ public class PriceAlertController {
     }
 
     @GetMapping("/alerts/edit/{id}")
-    public String editAlert(@PathVariable("id") Long id,
-                            Model model){
+    public String editAlert(@PathVariable("id") Long id, Model model){
         PriceAlert alert = priceAlertService.findById(id);
         List<Symbol> symbols = priceAlertService.getSymbols();
         if (alert != null){

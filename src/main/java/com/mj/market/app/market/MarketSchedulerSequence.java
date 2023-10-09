@@ -1,7 +1,7 @@
 package com.mj.market.app.market;
 import com.mj.market.app.dataprocessor.MarketDataProcessor;
 import com.mj.market.app.market.dto.SimpleResponseDto;
-import com.mj.market.app.notifier.UserNotifier;
+import com.mj.market.app.notifier.UserAlertNotifier;
 import com.mj.market.app.pricealert.PriceAlert;
 import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
@@ -9,7 +9,7 @@ import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
 import com.mj.market.config.ColorConsole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public abstract class MarketSchedulerSequence {
     private static SymbolService symbolService;
     private static PriceAlertService priceAlertService;
     private static Set<Symbol> selectedSymbols = new HashSet<>();
-    private final UserNotifier userNotifier;
+    private final UserAlertNotifier userAlertNotifier;
     private static List<PriceAlert> priceAlerts;
 
 
@@ -31,14 +31,15 @@ public abstract class MarketSchedulerSequence {
     private Set<PriceAlert> priceAlertsToNotify;
     private List<SimpleResponseDto> simpleResponseDto;
 
-    private static final boolean loggerEnable = true;
+    @Value("${logger.console.on}")
+    private boolean LOGGER_ON;
 
     @Autowired
-    public MarketSchedulerSequence(String apiName, PriceAlertService priceAlertService, SymbolService symbolService, UserNotifier userNotifier) {
+    public MarketSchedulerSequence(String apiName, PriceAlertService priceAlertService, SymbolService symbolService, UserAlertNotifier userNotifier) {
         this.name = apiName;
         this.priceAlertService = priceAlertService;
         this.symbolService = symbolService;
-        this.userNotifier = userNotifier;
+        this.userAlertNotifier = userNotifier;
         this.supportedSymbolType = setSupportedSymbolType();
     }
 
@@ -50,7 +51,7 @@ public abstract class MarketSchedulerSequence {
         //Read user defined price alerts
 
         priceAlerts = readActiveUserAlerts();
-        if(loggerEnable)ColorConsole.printlnYellow("1/4 : priceAlerts = "+ priceAlerts.toString());
+        if(LOGGER_ON)ColorConsole.printlnYellow("1/4 : priceAlerts = "+ priceAlerts.toString());
 
         if(priceAlerts != null && !priceAlerts.isEmpty()){
 
@@ -59,12 +60,12 @@ public abstract class MarketSchedulerSequence {
 
             //Get symbols matching Market API implementation
             filteredSymbols = getSymbolsSupportedByMarketApi(selectedSymbols);
-            if(loggerEnable)ColorConsole.printlnRed("2/4 : filteredSymbols = "+ filteredSymbols.toString());
+            if(LOGGER_ON)ColorConsole.printlnRed("2/4 : filteredSymbols = "+ filteredSymbols.toString());
 
             if(filteredSymbols != null && !filteredSymbols.isEmpty()){
                 //get market symbols prices from API
                 simpleResponseDto = requestPricesForScheduler(filteredSymbols);
-                if(loggerEnable)ColorConsole.printlnGreen("3/4 : Response From: "+ name + " "+ simpleResponseDto.toString());
+                if(LOGGER_ON)ColorConsole.printlnGreen("3/4 : Response From: "+ name + " "+ simpleResponseDto.toString());
 
                 //Analise prices and delegates calculations
                 if(simpleResponseDto != null && !simpleResponseDto.isEmpty())
@@ -73,7 +74,7 @@ public abstract class MarketSchedulerSequence {
                     saveChangesInPriceAlerts(priceAlertsToNotify);
                     if(priceAlertsToNotify != null && !priceAlertsToNotify.isEmpty())
 
-                        if(loggerEnable)ColorConsole.printlnPurple("4/4 Go notify: " + priceAlertsToNotify.toString());
+                        if(LOGGER_ON)ColorConsole.printlnPurple("4/4 Go notify: " + priceAlertsToNotify.toString());
                         //notify user about price changes
                         notifyUser(priceAlertsToNotify);
             }
@@ -128,7 +129,7 @@ public abstract class MarketSchedulerSequence {
     }
 
     private void notifyUser(Set<PriceAlert> priceAlertsToNotify) {
-        userNotifier.notify(priceAlertsToNotify);
+        userAlertNotifier.notifyUserAboutPriceChange(priceAlertsToNotify);
     }
 
     protected boolean checkIfSymbolIsValid(String code) {

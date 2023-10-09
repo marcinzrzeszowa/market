@@ -1,10 +1,10 @@
 package com.mj.market.app.user;
 
+import com.mj.market.app.user.registration.RegistrationTokenService;
 import com.mj.market.app.validator.UserValidator;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +19,7 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserValidator userValidator;
-    private final PasswordEncoder passwordEncoder;
-
+    private final RegistrationTokenService registrationTokenService;
 
 
     @GetMapping("/login")
@@ -45,6 +44,19 @@ public class UserController {
         return "register";
     }
 
+    //TODO new test it
+    @GetMapping("/register/confirm/{token}")
+    public String confirmRegisterToken(@PathVariable("token") String token, Model model){
+        User user = registrationTokenService.confirmRegistrationToken(token);
+        String communicate = "Nie zarejestrowano użytkownika. Błędny token";
+        if(user != null){
+            userService.enableUser(user);
+            communicate = "Zarejestrowano użytkownika " + user.getUsername();
+        }
+        model.addAttribute("communicate", communicate);
+        return "confirm";
+    }
+
     @PostMapping("/register")
     public String registration(@ModelAttribute("userForm") @Valid User user,
                                BindingResult bindingResult) {
@@ -53,10 +65,7 @@ public class UserController {
             logger.error(String.valueOf(bindingResult.getFieldError()));
             return "register";
         }
-        String codedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(codedPassword);
-        user.setRole(Role.USER);
-        userService.saveUser(user);
+        userService.register(user);
         return "redirect:/users";
     }
 

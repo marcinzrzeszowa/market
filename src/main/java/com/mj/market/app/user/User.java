@@ -7,22 +7,20 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.mj.market.app.pricealert.PriceAlert;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+@Entity
+@Table(name="app_user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name="app_user")
+@EqualsAndHashCode
 public class User implements UserDetails{
 
     @Column(name = "id")
@@ -47,6 +45,10 @@ public class User implements UserDetails{
     @NotBlank(message = "Podaj email")
     private String email;
 
+    private Boolean locked = false;
+
+    private Boolean enabled = false;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy= "user")
     private Set<PriceAlert> priceAlerts;
 
@@ -68,7 +70,7 @@ public class User implements UserDetails{
     }
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
     @Override
     public boolean isCredentialsNonExpired() {
@@ -76,6 +78,6 @@ public class User implements UserDetails{
     }
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

@@ -7,47 +7,35 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return new CustomUserDetailsService();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    //TODO custom Authority Provider impl
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return daoAuthenticationProvider;
-    }
+    private final CustomUserDetailsService customUserDetailsService;
 
     private static final String[] AUTHENTICATED_ENDPOINTS = {
             "/alerts", "/user", "/articles/new", "/price_alerts", "/price_alert_new", "/price_alert"};
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.httpBasic()
                 .and().authorizeRequests()
 
-                .antMatchers("/","/articles","/home").permitAll()
+                .antMatchers("/","/articles","/home", "/register/confirm/*").permitAll()
                 .antMatchers(HttpMethod.POST,"/articles").hasAnyRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE,"/articles").hasRole(Role.ADMIN.name())
                 .antMatchers("/users","/register").hasRole(Role.ADMIN.name())
@@ -68,6 +56,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and().csrf().disable();
 
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
 /*    @Bean  //Spring Boot v3..
@@ -97,5 +98,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         );
         return http.build();
-    }*/
+    }
+     public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+    }
+    */
 }

@@ -25,17 +25,6 @@ public class PriceAlertsCacheClass implements PriceAlertsCache, PriceAlertsObser
         }
         return priceAlerts;
     }
-
-    /*@Override
-    public List<PriceAlert> findAll() {
-        if (!isActualAlertsList) {
-            priceAlerts = priceAlertRepository.findAll();
-            isActualAlertsList = true;
-        }
-        return priceAlerts;
-    }
-*/
-
     @Override
     public void setNotActualPriceAlertsCollection() {
         isActualAlertsList = false;

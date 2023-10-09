@@ -42,7 +42,7 @@ public class ArticleService {
             return article;
         }
     }
-    //-----------------------------------------------------------------
+
     public Article getArticle(Long id){
         return articleRepository.findById(id).orElseThrow(()->new RuntimeException("Artykuł nie istnieje"));
     }

@@ -5,7 +5,7 @@ import com.mj.market.app.market.MarketSchedulerSequence;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleRequestDto;
 import com.mj.market.app.market.dto.SimpleResponseDto;
-import com.mj.market.app.notifier.UserNotifier;
+import com.mj.market.app.notifier.UserAlertNotifier;
 import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
@@ -44,7 +44,7 @@ public class BankierMarketApi extends MarketSchedulerSequence implements MarketA
 
     private final String GPW="https://data.nasdaq.com/data/WSE-warsaw-stock-exchange-gpw";
 
-    public BankierMarketApi(PriceAlertService priceAlertService, SymbolService symbolService, UserNotifier userNotifier) {
+    public BankierMarketApi(PriceAlertService priceAlertService, SymbolService symbolService, UserAlertNotifier userNotifier) {
         super("BankierMarketApi", priceAlertService, symbolService, userNotifier);
     }
 

@@ -41,12 +41,16 @@ class StartupData implements CommandLineRunner {
                 .username("admin")
                 .email("marcinzbrzozowa@gmail.com")
                 .role(Role.ROLE_ADMIN)
+                .locked(false)
+                .enabled(true)
                 .password(passwordEncoder.encode("123"))
                 .build();
         User user1 = User.builder()
                 .username("test")
                 .email("marcinzbrzozowa@gmail.com")
                 .role(Role.ROLE_USER)
+                .locked(false)
+                .enabled(true)
                 .password(passwordEncoder.encode("test"))
                 .build();
         userService.saveUser(admin);
