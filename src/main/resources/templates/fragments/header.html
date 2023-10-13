@@ -38,14 +38,18 @@
                 </li>
                 <li>
                     <div sec:authorize="hasRole('ADMIN')" >
-                        <a th:href="@{/users}"th:text="Użytkownicy" />
+                        <a th:text="Konta" th:href="@{/users}"></a>
+                    </div>
+                    <div sec:authorize="hasRole('USER')" >
+                        <span th:text ="${#authentication.getPrincipal().getId()}"></span>
+                        <a th:text="Konto" th:href="@{'/user/{id}' (id=${#authentication.getPrincipal().getId()})}"></a>
                     </div>
                 </li>
             </ul>
             <ul>
                 <li>
                     <div th:class="AuthMenu">
-                        <div sec:authorize="isAuthenticated()" sec:authentication="name"> </div>
+                        <div sec:authorize="isAuthenticated()" sec:authentication="name" ></div>
                         <a th:href="@{/logout}"  sec:authorize="isAuthenticated()" th:text="Wyloguj" />
                         <a th:href="@{/login}"  sec:authorize="isAnonymous()" th:text="Logowanie" />
                     </div>

@@ -39,6 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/articles").hasAnyRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE,"/articles").hasRole(Role.ADMIN.name())
                 .antMatchers("/users","/register").hasRole(Role.ADMIN.name())
+                .antMatchers("/authenticated/user").hasRole(Role.USER.name())
                 .antMatchers("/alerts").authenticated()
 
                 .and().formLogin()

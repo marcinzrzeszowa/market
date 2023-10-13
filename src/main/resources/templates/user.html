@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:replace="~{fragments/header :: headerCss}">
 </head>
@@ -13,15 +13,24 @@
         <fieldset>
             <label>Nazwa użytkownika
                 <input type="text" th:field="*{username}"/>
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" th:class="error"></p>
             </label>
             <label>
                 <input type="hidden" th:field="*{password}"/>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:class="error"></p>
             </label>
             <label>Email
                 <input type="text" th:field="*{email}"/>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:class="error"></p>
+            </label>
+            <label sec:authorize="hasRole('ADMIN')">Konto potwierdzone
+                <input type="checkbox" th:field="*{enabled}"/>
+            </label>
+            <label sec:authorize="hasRole('ADMIN')">Konto zablokowane
+                <input type="checkbox" th:field="*{locked}"/>
             </label>
             <input type="submit" th:action="@{'/user/{id}' (id=${user.getId()})}" th:value="Zapisz"  />
-            <a href="/users"/>Wstecz</a>
+            <a sec:authorize="hasRole('ADMIN')"  href="/users" th:text="Wstecz" />
         </fieldset>
     </form>
     </div>

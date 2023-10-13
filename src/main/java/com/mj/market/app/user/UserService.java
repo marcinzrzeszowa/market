@@ -57,6 +57,8 @@ public class UserService {
         User u = findById(user.getId());
         u.setEmail(user.getEmail());
         u.setUsername(user.getUsername());
+        u.setEnabled(user.getEnabled());
+        u.setLocked(user.getLocked());
         userRepository.save(u);
     }
 

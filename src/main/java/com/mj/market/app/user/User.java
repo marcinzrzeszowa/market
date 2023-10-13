@@ -45,8 +45,10 @@ public class User implements UserDetails{
     @NotBlank(message = "Podaj email")
     private String email;
 
+    @Column(name ="locked")
     private Boolean locked = false;
 
+    @Column(name ="enabled")
     private Boolean enabled = false;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy= "user")

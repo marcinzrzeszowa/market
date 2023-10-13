@@ -19,6 +19,8 @@
             <ul  th:each="user: ${usersList}">
                 <il>
                     <label  th:text="${user.getUsername()}" />
+                </il>
+                <il>
                     <a th:href="@{'/user/{id}'(id=${user.getId()})}">Edytuj</a>
                     <a th:href="@{'/user/delete/{id}'(id=${user.getId()})}">Usuń</a>
                 </il>

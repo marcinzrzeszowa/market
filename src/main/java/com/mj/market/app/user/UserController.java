@@ -5,6 +5,8 @@ import com.mj.market.app.validator.UserValidator;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -82,6 +84,16 @@ public class UserController {
     @GetMapping("/user/{id}")
     public String showUser(@PathVariable Long id, Model model){
         User user = userService.findById(id);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "user";
+        }else {
+            return "error/404";
+        }
+    }
+
+    @GetMapping("/authenticated/user")
+    public String showUser(@AuthenticationPrincipal User user, Model model) {
         if (user != null) {
             model.addAttribute("user", user);
             return "user";

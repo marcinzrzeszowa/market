@@ -47,7 +47,7 @@ class StartupData implements CommandLineRunner {
                 .build();
         User user1 = User.builder()
                 .username("test")
-                .email("marcinzbrzozowa@gmail.com")
+                .email("testa@gmail.com")
                 .role(Role.ROLE_USER)
                 .locked(false)
                 .enabled(true)
