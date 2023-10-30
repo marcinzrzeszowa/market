@@ -28,25 +28,28 @@ public class UserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "error.user.username");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "error.user.password");
 
-        if(user.getUsername().length() < 3) {
+        if(user.getUsername().length() < 3 ) {
             errors.rejectValue("username", "error.user.username.toShort");
         }
-        if(user.getUsername().length() > 32){
+        if(user.getUsername().length() > 20){
             errors.rejectValue("username","error.user.username.toLong");
-        }
-
-        if (userService.findByUsername(user.getUsername()) != null) {
-            errors.rejectValue("username", "error.user.username.duplicated");
-        }
-        if (userService.findByEmail(user.getEmail()) != null){
-            errors.rejectValue("email", "error.user.email.duplicated");
         }
 
         if (user.getPassword().length() < 3) {
             errors.rejectValue("password", "error.user.password.toShort");
         }
-        if (user.getPassword().length() > 32){
+        if (user.getPassword().length() > 100 ){
             errors.rejectValue("password", "error.user.password.toLong");
+        }
+
+        User repoUser = userService.findByUsername(user.getUsername());
+        if (repoUser != null && repoUser.getId() != user.getId()) {
+            errors.rejectValue("username", "error.user.username.duplicated");
+        }
+
+        repoUser = userService.findByEmail(user.getEmail());
+        if (repoUser != null && repoUser.getId() != user.getId()){
+            errors.rejectValue("email", "error.user.email.duplicated");
         }
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 
 <head th:replace="~{fragments/header :: headerCss}">
 </head>
@@ -12,16 +12,17 @@
     <form method="POST" th:object="${user}">
         <fieldset>
             <label>Nazwa użytkownika
-                <input type="text" th:field="*{username}"/>
+                <input sec:authorize="isAuthenticated()" type="text" th:field="*{username}" />
                 <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" th:class="error"></p>
             </label>
-            <label>
+            <label>Email
+                <input sec:authorize="isAuthenticated()" type="text" th:field="*{email}" />
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:class="error"></p>
+            </label>
+            <label>Hasło
+                <a sec:authorize="isAuthenticated()" th:href="@{'/user/password/{id}'(id=${user.getId()})}">Zmien hasło</a>
                 <input type="hidden" th:field="*{password}"/>
                 <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:class="error"></p>
-            </label>
-            <label>Email
-                <input type="text" th:field="*{email}"/>
-                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:class="error"></p>
             </label>
             <label sec:authorize="hasRole('ADMIN')">Konto potwierdzone
                 <input type="checkbox" th:field="*{enabled}"/>
@@ -31,6 +32,7 @@
             </label>
             <input type="submit" th:action="@{'/user/{id}' (id=${user.getId()})}" th:value="Zapisz"  />
             <a sec:authorize="hasRole('ADMIN')"  href="/users" th:text="Wstecz" />
+            <a sec:authorize="hasRole('USER')"  href="/home" th:text="Wstecz" />
         </fieldset>
     </form>
     </div>

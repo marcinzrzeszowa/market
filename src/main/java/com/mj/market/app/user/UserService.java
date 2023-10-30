@@ -1,33 +1,22 @@
 package com.mj.market.app.user;
 
 import com.mj.market.app.notifier.EmailService;
-import com.mj.market.app.user.registration.RegistrationToken;
-import com.mj.market.app.user.registration.RegistrationTokenRepository;
-import com.mj.market.app.user.registration.RegistrationTokenService;
-import lombok.AllArgsConstructor;
+import com.mj.market.app.user.registration.Token;
+import com.mj.market.app.user.registration.TokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+    private static final long ADMIN_INIT_ID = 1L;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RegistrationTokenService registrationTokenService;
+    private final TokenService registrationTokenService;
     private final EmailService emailService;
 
     public User findByUsername(String username) throws UsernameNotFoundException{
@@ -49,8 +38,7 @@ public class UserService {
 
     public void deleteUser(Long id) throws UsernameNotFoundException {
         //initialization Admin ID cant be deleted
-        Long initAdminId = Long.valueOf(1);
-        if(id != initAdminId) userRepository.deleteById(id);
+        if(id != ADMIN_INIT_ID) userRepository.deleteById(id);
     }
 
     public void updateUser(User user) {
@@ -72,8 +60,14 @@ public class UserService {
         user.setRole(Role.USER);
         saveUser(user);
 
-        RegistrationToken token = registrationTokenService.createRegistrationToken(user);
+        Token token = registrationTokenService.createToken(user);
         emailService.sendRegistrationToken(token);
+    }
+
+    public void resetPassword(User user, User formUser) {
+        String codedPassword = passwordEncoder.encode(formUser.getPassword());
+        user.setPassword(codedPassword);
+        userRepository.save(user);
     }
 
     public void enableUser(User user){

@@ -2,6 +2,7 @@ package com.mj.market.app.market;
 
 import com.mj.market.config.ColorConsole;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,10 @@ public class MarketRequestScheduler {
     private static final long minute = 1000l*60;
     private static final long hour = minute*60;
     private static final long day = hour*24;
+
+    @Value("${logger.console.on}")
+    private boolean LOGGER_ON;
+
 
     private final MarketSchedulerSequence cryptoMarketSequence;
     //TODO add Bankier API
@@ -25,9 +30,9 @@ public class MarketRequestScheduler {
     @Scheduled(fixedRate = 3 * second, initialDelay = 2 * second) // zmienic na 5 min
     private void marketScheduler5m(){
 
-        ColorConsole.printlnBlue(Thread.currentThread().getName());
+        if(LOGGER_ON)ColorConsole.printlnBlue(Thread.currentThread().getName());
         cryptoMarketSequence.startSimplePriceRequestSequence();
-        ColorConsole.printlnBlue("+++");
+        if(LOGGER_ON)ColorConsole.printlnBlue("+++");
 
     }
 

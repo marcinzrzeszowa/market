@@ -9,27 +9,27 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class RegistrationTokenService {
-    private final RegistrationTokenRepository tokenRepository;
+public class TokenService {
+    private final TokenRepository tokenRepository;
 
-    private void saveRegistrationToken(RegistrationToken token){
+    private void saveToken(Token token){
         tokenRepository.save(token);
     }
 
-    public RegistrationToken createRegistrationToken(User user) {
+    public Token createToken(User user) {
         String token = UUID.randomUUID().toString();
-        RegistrationToken registrationToken = new RegistrationToken(
+        Token registrationToken = new Token(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(1),
                 user
         );
-        saveRegistrationToken(registrationToken);
+        saveToken(registrationToken);
         return registrationToken;
     }
 
     public User confirmRegistrationToken(String token) {
-        RegistrationToken repoToken = tokenRepository.findByToken(token)
+        Token repoToken = tokenRepository.findByToken(token)
                 .orElseThrow(()->new IllegalStateException("Błędny token"));
 
         if(repoToken.getConfirmAt() != null){

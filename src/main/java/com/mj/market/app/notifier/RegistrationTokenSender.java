@@ -1,7 +1,7 @@
 package com.mj.market.app.notifier;
 
-import com.mj.market.app.user.registration.RegistrationToken;
+import com.mj.market.app.user.registration.Token;
 
 public interface RegistrationTokenSender{
-    void sendRegistrationToken(RegistrationToken token);
+    void sendRegistrationToken(Token token);
 }

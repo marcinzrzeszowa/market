@@ -1,8 +1,7 @@
 package com.mj.market.app.notifier;
 
 import com.mj.market.app.pricealert.PriceAlert;
-import com.mj.market.app.user.User;
-import com.mj.market.app.user.registration.RegistrationToken;
+import com.mj.market.app.user.registration.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,13 +76,13 @@ public class EmailService implements UserAlertNotifier, RegistrationTokenSender 
     }
 
     @Override
-    public void sendRegistrationToken(RegistrationToken token) {
+    public void sendRegistrationToken(Token token) {
         Message msg = createRegistrationTokenMessage(token);
         MimeMessage mimeMessage = createEmail(msg.email(), msg.titleMsg(), msg.message());
         sendEmail(mimeMessage);
     }
 
-    private static Message createRegistrationTokenMessage(RegistrationToken token) {
+    private static Message createRegistrationTokenMessage(Token token) {
         String userName = token.getUser().getUsername();
         String email = token.getUser().getEmail();
 

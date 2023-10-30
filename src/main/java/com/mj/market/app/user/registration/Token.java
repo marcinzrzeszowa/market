@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
-public class RegistrationToken {
+public class Token {
 
     @Id
     @Column(name = "id_token")
@@ -30,7 +30,7 @@ public class RegistrationToken {
     private LocalDateTime expiresAt;
     private LocalDateTime confirmAt;
 
-    public RegistrationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
+    public Token(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiredAt;

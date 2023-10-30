@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //TODO change to optional
     User findByUsername(String username);
     User save(User entity);
     List<User>findAll();
