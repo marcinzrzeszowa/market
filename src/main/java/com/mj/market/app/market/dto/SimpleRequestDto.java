@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class SimpleRequestDto implements RequestObject {
+public class SimpleRequestDto {
 
         private String symbol;
         private BigDecimal price;

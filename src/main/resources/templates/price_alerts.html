@@ -8,6 +8,7 @@
 <div th:class="content">
     <div class="articleShort">
         <h4>Alerty</h4>
+        <img th:src="@{/notifier.jpg}" width="300px" />
         <p><a th:href="@{'/alerts/new'}">Nowy alert cenowy</a></p>
         <table>
             <tr>
@@ -17,7 +18,7 @@
                 <th>Cena max</th>
                 <th>Cena min</th>
                 <th>Aktywny</th>
-                <th sec:authorize="hasRole('ADMIN')">Użytkownik</th>
+                <th sec:authorize="hasRole('ADMIN')">Moje konto</th>
                 <th>Edytuj</th>
                 <th>Usuń</th>
             </tr>

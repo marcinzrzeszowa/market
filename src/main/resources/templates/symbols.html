@@ -8,8 +8,8 @@
 
 <div th:class="content">
     <div class="articleShort">
-    <h4>Notowania giełdowe <img th:src="@{/chart.png}" width="30px" /></h4>
-    <br>
+    <h4>Notowania giełdowe</h4>
+        <h6>Aktualne dane z www.Binance.com</h6>
 <table>
     <tr>
         <th>Nazwa</th>
@@ -25,7 +25,9 @@
             <a th:href="@{'/symbols/{code}'(code=${symbol.getCode()})}">otwórz</a>
         </td>-->
     </tr>
-</table></div>
+</table>
+       <img th:src="@{/stock.jpg}" width="300px" />
+    </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

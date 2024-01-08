@@ -45,8 +45,9 @@ public class PriceAlertService implements PriceAlertObservable{
     }
 
     public void deletePriceAlert(Long id){
-        if(priceAlertRepository.existsById(id)){
-            priceAlertRepository.deleteById(id);
+        PriceAlert priceAlert = priceAlertRepository.findById(id).orElseThrow();
+        if(priceAlert != null){
+            priceAlertRepository.delete(priceAlert);
             notifyChangeInPriceAlertsCollection();
         }
     }

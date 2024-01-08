@@ -6,6 +6,10 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div th:class="content">
+    <div class="articleShort">
+    <h4>Nowy alert cenowy</h4>
+    <img th:src="@{/css/btcLogo.jpg}" width="300px" />
+    <br/>
     <form method="post" th:object="${alertForm}">
         <fieldset>
             <label>Symbol kursu
@@ -40,6 +44,7 @@
             <a href="/alerts"/>Wstecz</a>
         </fieldset>
     </form>
+    </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

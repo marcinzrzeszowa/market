@@ -31,13 +31,28 @@ html{
   background-repeat: repeat;
   color:black;
   -webkit-overflow-scrolling:touch;
+
 }
 
 
 body {
-overflow-x: hidden;
-font-family: Verdana,Tahoma, sans-serif;
-margin: 0;
+  overflow-x: hidden;
+  font-family: Verdana, Tahoma, sans-serif;
+  margin: 0;
+
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ustawienie na niższy indeks z-index niż reszta treści */
+  background-image: url('eth.jpg');
+  background-repeat: repeat; /* Powtarzanie obrazka */
+  background-size: 600px 600px; /* Rozmiar obrazka */
+  opacity: 0.2;
 }
 
 .menu-container {
@@ -52,6 +67,7 @@ z-index: 1;
 -webkit-user-select: none;
 user-select: none;
 box-sizing: border-box;
+
 }
 
 .menu-logo {
@@ -69,6 +85,7 @@ flex-shrink: 0;
 text-decoration: none;
 color:#000000;
 transition: color 0.3s ease;
+
 }
 
 .menu-container a:hover {
@@ -87,7 +104,6 @@ z-index: 2; /* and place it over the hamburger */
 -webkit-touch-callout: none;
 }
 
-/* Burger menu */
 .menu-container span {
 display: block;
 width: 33px;
@@ -135,7 +151,6 @@ padding: 10px 0;
 font-size: 22px;
 }
 
-/* mobile styles */
 @media only screen and (max-width: 479px) {
 .menu-container {
 flex-direction: column;
@@ -174,7 +189,7 @@ transform: translateX(-100%);
 }
 }
 
-/* desktop styles */
+
 @media only screen and (min-width: 480px) {
 .menu-container {
 width: 100%;
@@ -525,7 +540,7 @@ textarea{
 
 #footer {
   background-color: #272f38;
-  height: 120px;
+  height: 200px;
   width: 100%;
   box-sizing: border-box;
   margin: auto;
@@ -584,7 +599,7 @@ table, tr{
 
 .logoFooter {
       height: 50px;
-      margin: 10px;
+      margin: 50px;
 }
 
 .headerMenu{

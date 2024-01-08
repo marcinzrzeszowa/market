@@ -13,7 +13,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class RequestDto implements RequestObject {
+public class RequestDto {
     private long openTime;
     private BigDecimal openPrice;
     private BigDecimal highPrice;

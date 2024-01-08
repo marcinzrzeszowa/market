@@ -1,24 +1,20 @@
 package com.mj.market.app.market;
 
-
-import com.mj.market.app.market.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-//@RestController
+
 @Controller
 public class MarketController {
 
     private final MarketService marketService;
 
-
     @Autowired
     public MarketController(MarketService marketService) {
         this.marketService = marketService;
     }
-
 
     @GetMapping(value = {"/symbols"})
     public String getSymbolsPrice(Model model){

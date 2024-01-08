@@ -6,6 +6,9 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="content">
+    <div class="articleShort">
+    <h4>Załóż konto</h4>
+    <img th:src="@{/users.jpg}" width="300px" />
     <form autocomplete="off" th:object="${userForm}" method="POST">
         <fieldset>
             <h1 text="Rejestracja użytkownika"></h1>
@@ -24,6 +27,7 @@
             <input type="submit" th:value="Rejestruj" th:action="@{/register}"/>
         </fieldset>
     </form>
+    </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

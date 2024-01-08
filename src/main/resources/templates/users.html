@@ -11,6 +11,7 @@
             <div class="articleShort">
 
                 <h4>Użytkowicy</h4>
+                <img th:src="@{/users.jpg}" width="300px" />
                 <br/>
             <a sec:authorize="hasRole('ADMIN')" th:href="@{/register}">Dodaj Użytkownika</a>
                 <br/>

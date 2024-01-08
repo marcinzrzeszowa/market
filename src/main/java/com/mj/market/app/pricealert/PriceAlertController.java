@@ -97,10 +97,9 @@ public class PriceAlertController {
         return "redirect:/alerts";
         }
 
-    @GetMapping(value = "/alerts/delete/{id}")
+    @GetMapping("/alerts/delete/{id}")
     public String deleteAlert(@PathVariable("id") Long id){
-        PriceAlert alert = priceAlertService.findById(id);
-        if(alert!=null){
+        if(id!=null){
             priceAlertService.deletePriceAlert(id);
             return "redirect:/alerts";
         } else {

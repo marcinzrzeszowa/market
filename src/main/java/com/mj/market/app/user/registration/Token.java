@@ -1,6 +1,7 @@
 package com.mj.market.app.user.registration;
 
 import com.mj.market.app.user.User;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Token {
 
     @Id
@@ -36,4 +38,6 @@ public class Token {
         this.expiresAt = expiredAt;
         this.user = user;
     }
+
+
 }

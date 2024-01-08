@@ -8,15 +8,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan
-@EntityScan
-@EnableJpaRepositories
+//@ComponentScan(basePackages = "com.mj.market")
+@EntityScan //szuka w innych pakiejtach
+//@EnableJpaRepositories  //szuka w innych pakiejtach
 @EnableScheduling
 public class MarketApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MarketApplication.class, args
-		);
+		SpringApplication.run(MarketApplication.class, args);
 	}
 
 }

@@ -93,7 +93,7 @@ class StartupData implements CommandLineRunner {
     //&nbsp;
     private void loadArticles(){
         Article a1 = new Article(
-                "Witam.<br/>Zakładka \"Notowania giełdowe\" zawiera odnośnik do aktualnych cen z giełdy. Proszę o cierpliwość przy ładowaniu ponieważ dane pochodzą z darmowego źródła. " +
+                "Witam.<br/>Zakładka \"Waluty\" zawiera odnośnik do aktualnych cen z giełdy." +
                         "Treść strony zostanie porzeżona o&nbsp;inną tematykę i nowe funkcjonalności.",
                 "Szukałem tematu na ciekawy projekt programistyczny, i stąd pomysł na stworzenie strony z&nbsp;kursami giełdowymi. " +
                         " <br/> Projekt powstał z wykorzystaniem języka programowania Java, oraz technologii: Spring Boot, MySQL, Thymeleaf, CSS, HTML. <br/> " +

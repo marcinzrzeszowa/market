@@ -47,6 +47,7 @@ public class UserController {
         return "register";
     }
 
+    //TODO load user logins and add validator for register
     @PostMapping("/register")
     public String registration(@ModelAttribute("userForm") @Valid User user,
                                BindingResult bindingResult) {
@@ -56,7 +57,7 @@ public class UserController {
             return "register";
         }
         userService.register(user);
-        return "redirect:/users";
+        return "redirect:/home";
     }
 
     @GetMapping("/register/confirm/{token}")

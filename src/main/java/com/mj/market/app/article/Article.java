@@ -1,13 +1,12 @@
 package com.mj.market.app.article;
 
-
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Entity
 @Table(name = "article")
@@ -35,6 +34,7 @@ public class Article implements Comparable{
     public Article() {
         this.localDate = LocalDate.now();
     }
+
     public Article(String shortDescription, String description) {
         this.shortDescription = shortDescription;
         this.Description = description;
@@ -74,18 +74,6 @@ public class Article implements Comparable{
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Article)) return false;
-        Article article = (Article) o;
-        return id.equals(article.id);
-    }
-    @Override
-    public int hashCode() {
-        return id.hashCode() + 21;
-    }
-
-    @Override
     public String toString() {
         return "Article{" +
                 "id=" + id + '\'' +
@@ -100,5 +88,17 @@ public class Article implements Comparable{
         Article pa = (Article) o;
         //revers order
         return Long.compare(pa.getId(), this.getId());
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(id, article.id) && Objects.equals(shortDescription, article.shortDescription) && Objects.equals(Description, article.Description) && Objects.equals(localDate, article.localDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, shortDescription, Description, localDate);
     }
 }

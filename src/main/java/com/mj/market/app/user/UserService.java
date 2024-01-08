@@ -57,7 +57,7 @@ public class UserService {
     public void register(User user) {
         String codedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(codedPassword);
-        user.setRole(Role.USER);
+        user.setRole(Role.ROLE_USER);
         saveUser(user);
 
         Token token = registrationTokenService.createToken(user);

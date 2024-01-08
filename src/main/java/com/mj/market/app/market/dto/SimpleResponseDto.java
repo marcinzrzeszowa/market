@@ -7,17 +7,12 @@ import java.math.BigDecimal;
 
 
 @Getter
-public class SimpleResponseDto implements ResponseObject{
+@AllArgsConstructor
+public class SimpleResponseDto {
 
         private String name;
         private String code;
         private BigDecimal price;
-
-    public SimpleResponseDto(String name, String code, BigDecimal price) {
-        this.name = name;
-        this.code = code;
-        this.price = price;
-    }
 
     @Override
     public String toString() {

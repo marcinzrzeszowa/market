@@ -51,7 +51,7 @@ public class User implements UserDetails{
     @Column(name ="enabled")
     private Boolean enabled = false;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy= "user")
+    @OneToMany(mappedBy= "user",cascade = CascadeType.ALL, fetch = FetchType.EAGER )
     private Set<PriceAlert> priceAlerts;
 
     @Override

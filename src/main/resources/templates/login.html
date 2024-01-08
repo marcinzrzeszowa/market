@@ -5,7 +5,9 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
     <div  th:class="content">
+        <div class="articleShort">
         <h4>Logowanie</h4>
+        <img th:src="@{/css/eth.jpg}" width="300px" />
         <div>
             <div>
                 <form autocomplete="off" th:action="@{/login}"  method="POST">
@@ -28,9 +30,13 @@
                                 <input type="submit" value="Zaloguj"/>
                             </div>
                         </div>
+                        <div>
+                            <a th:href="@{/register}">Rejestruj</a>
+                        </div>
                     </fieldset>
                 </form>
             </div>
+        </div>
         </div>
     </div>
 <div th:replace="~{fragments/footer :: footer}"></div>

@@ -5,13 +5,11 @@ import com.mj.market.app.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -35,12 +33,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.httpBasic()
                 .and().authorizeRequests()
 
-                .antMatchers("/","/articles","/home", "/register/confirm/*").permitAll()
-                .antMatchers(HttpMethod.POST,"/articles").hasAnyRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.DELETE,"/articles").hasRole(Role.ADMIN.name())
-                .antMatchers("/users","/register").hasRole(Role.ADMIN.name())
+                .antMatchers("/","/articles","/home","/register","/register/confirm/*").permitAll()
                 .antMatchers("/authenticated/user").hasRole(Role.USER.name())
                 .antMatchers("/alerts","/user/*").authenticated()
+                .antMatchers("/articles","/users").hasRole(Role.ADMIN.name())
 
                 .and().formLogin()
                 .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password")
@@ -55,7 +51,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID","remember-me" )
                 .logoutSuccessUrl("/home")
 
-                .and().csrf().disable();
+                .and().csrf();
 
     }
 

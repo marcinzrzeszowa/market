@@ -2,9 +2,10 @@ package com.mj.market.app.market;
 
 import com.mj.market.config.DateTime;
 import com.mj.market.app.market.api.Interval;
-import com.mj.market.app.market.api.MarketApi;
+import com.mj.market.app.market.api.CryptoMarketApi;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleResponseDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +16,11 @@ import java.util.List;
 @Service
 public class MarketService{
 
-    private final MarketApi cryptoMarketApi;
+    private final CryptoMarketApi cryptoMarketApi;
    // private final MarketApi fiatMarketApi;
 
-
-    public MarketService(@Qualifier("BinanceMarketApi") MarketApi cryptoMarketApi) {
+    @Autowired
+    public MarketService(@Qualifier("BinanceMarketApi") CryptoMarketApi cryptoMarketApi) {
         this.cryptoMarketApi = cryptoMarketApi;
     }
 

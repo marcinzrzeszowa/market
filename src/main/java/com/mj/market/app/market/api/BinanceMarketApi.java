@@ -2,7 +2,7 @@ package com.mj.market.app.market.api;
 
 import com.mj.market.app.notifier.UserAlertNotifier;
 import com.mj.market.config.DateTime;
-import com.mj.market.app.market.MarketSchedulerSequence;
+import com.mj.market.app.market.MarketScheduler;
 import com.mj.market.app.market.dto.ObjectMapper;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleRequestDto;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Qualifier("BinanceMarketApi")
-public class BinanceMarketApi extends MarketSchedulerSequence implements MarketApi{
+public class BinanceMarketApi extends MarketScheduler implements CryptoMarketApi {
     private RestTemplate restTemplate = new RestTemplate();
     private static final EnumSet<SymbolType> handledSymbols = EnumSet.of(SymbolType.KRYPTOWALUTA);
 
@@ -38,6 +38,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         super("BinanceMarketApi", priceAlertService, symbolService, userNotifier);
     }
 
+    //TODO test it
     @Override
     public List<SimpleResponseDto> getAllPrices(){
         Set<Symbol> symbols = super.getAllSymbolsSupportedByMarketApi();
@@ -46,6 +47,7 @@ public class BinanceMarketApi extends MarketSchedulerSequence implements MarketA
         return response;
     }
 
+    //TODO test it
     @Override
     public SimpleRequestDto[] getPrices(Set<Symbol> filteredSymbols) {
         List<String> filteredSymbolsList = filteredSymbols.stream()

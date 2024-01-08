@@ -21,13 +21,9 @@ public class PriceAlert {
     private String description;
 
     @Column(name = "max_price", precision = 10, scale = 3)
-    /*@Min(value=0, message="Cena maksymalna jest za mała")
-    @Max(value=100000, message="Cena maksymalna jest za duża !!!!!!!!!!!!!!")*/
     private BigDecimal maxPrice;
 
     @Column(name = "min_price", precision = 10, scale = 3)
-   /* @Min(value=0, message="Cena minimalna jest za mała")
-    @Max(value=1000000, message="Cena minimalna jest za duża")*/
     private BigDecimal minPrice;
 
     @Column(name = "is_active")
@@ -43,7 +39,7 @@ public class PriceAlert {
     @JoinColumn(name = "symbol")
     private Symbol symbol;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

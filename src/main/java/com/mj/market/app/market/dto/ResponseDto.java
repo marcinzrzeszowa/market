@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ResponseDto implements ResponseObject{
+public class ResponseDto {
 
     private LocalDateTime openTime;
     private BigDecimal openPrice;

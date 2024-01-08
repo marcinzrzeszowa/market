@@ -29,9 +29,11 @@
             <label>Alert aktywny
                 <input  type="checkbox" th:field="*{Active}"/>
             </label>
+            <a th:href="@{'/alerts/delete/{id}'(id=${id})}"> Usuń </a>
             <br>
             <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}" th:class="error" />
             <input type="submit" th:action="@{/alerts/edit/{id}}" th:value="Zapisz"  />
+
             <a href="/alerts"/>Wstecz</a>
         </fieldset>
     </form>
