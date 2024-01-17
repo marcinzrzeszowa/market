@@ -1,7 +1,8 @@
-package com.mj.market.config;
+package com.mj.market.app.config;
 
 import com.mj.market.app.user.CustomUserDetailsService;
 import com.mj.market.app.user.Role;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,18 +26,24 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //auth.userDetailsService(customUserDetailsService); // add password coder
         auth.authenticationProvider(authenticationProvider());
     }
+
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.httpBasic()
                 .and().authorizeRequests()
-
                 .antMatchers("/","/articles","/home","/register","/register/confirm/*").permitAll()
                 .antMatchers("/authenticated/user").hasRole(Role.USER.name())
-                .antMatchers("/alerts","/user/*").authenticated()
                 .antMatchers("/articles","/users").hasRole(Role.ADMIN.name())
+                .antMatchers("/alerts","/user/*").authenticated()
+             /*   .antMatchers("/","/articles","/home").permitAll()
+                .antMatchers(HttpMethod.POST,"/articles").hasAnyRole(Role.ADMIN.name())
+                .antMatchers(HttpMethod.DELETE,"/articles").hasRole(Role.ADMIN.name())
+                .antMatchers("/users","/register").hasRole(Role.ADMIN.name())
+                .antMatchers("/alerts").authenticated()*/
 
                 .and().formLogin()
                 .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password")
@@ -64,11 +71,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-/*    @Bean  //Spring Boot v3..
+/*    @Bean  //Spring Boot v3
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
         http
                 .authenticationProvider(authenticationProvider())

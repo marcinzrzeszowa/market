@@ -1,4 +1,4 @@
-package com.mj.market.config;
+package com.mj.market.app.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;

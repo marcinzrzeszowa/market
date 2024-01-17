@@ -1,8 +1,8 @@
 package com.mj.market.app.market;
 
-import com.mj.market.config.DateTime;
-import com.mj.market.app.market.api.Interval;
+import com.mj.market.app.config.DateTime;
 import com.mj.market.app.market.api.CryptoMarketApi;
+import com.mj.market.app.market.api.Interval;
 import com.mj.market.app.market.dto.ResponseDto;
 import com.mj.market.app.market.dto.SimpleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;

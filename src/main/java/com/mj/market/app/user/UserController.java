@@ -5,9 +5,6 @@ import com.mj.market.app.validator.UserValidator;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,9 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserService userService;
-    private final UserValidator userValidator;
-    private final TokenService registrationTokenService;
+    private  UserService userService;
+    private  UserValidator userValidator;
+    private  TokenService registrationTokenService;
 
 
     @GetMapping("/login")

@@ -10,14 +10,10 @@ import java.util.stream.Collectors;
 
 
 @Service
+@AllArgsConstructor
 public class ArticleService {
 
-    private final ArticleRepository articleRepository;
-
-    @Autowired
-    public ArticleService(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+    private ArticleRepository articleRepository;
 
     public Article createArticle(Article article) {
         Article newArticle = new Article();

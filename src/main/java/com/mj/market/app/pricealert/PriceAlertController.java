@@ -5,9 +5,9 @@ import com.mj.market.app.user.Role;
 import com.mj.market.app.user.User;
 import com.mj.market.app.user.UserService;
 import com.mj.market.app.validator.PriceAlertValidator;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,19 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 public class PriceAlertController {
     private static final Logger logger = LoggerFactory.getLogger(PriceAlertController.class);
-    private final PriceAlertService priceAlertService;
-    private final UserService userService;
-    private final PriceAlertValidator priceAlertValidator;
-
-    @Autowired
-    public PriceAlertController(PriceAlertService priceAlertService, UserService userService, PriceAlertValidator priceAlertValidator) {
-        this.priceAlertService = priceAlertService;
-        this.userService = userService;
-        this.priceAlertValidator = priceAlertValidator;
-    }
+    private  PriceAlertService priceAlertService;
+    private  UserService userService;
+    private  PriceAlertValidator priceAlertValidator;
 
     @GetMapping("/alerts")
     public String showUserAlerts(Model model, Authentication authentication){

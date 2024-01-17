@@ -1,6 +1,6 @@
 package com.mj.market.app.market;
 
-import com.mj.market.config.ColorConsole;
+import com.mj.market.app.config.ColorConsole;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

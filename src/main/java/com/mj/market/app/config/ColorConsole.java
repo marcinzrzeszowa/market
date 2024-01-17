@@ -1,4 +1,4 @@
-package com.mj.market.config;
+package com.mj.market.app.config;
 
 import java.util.List;
 import java.util.Random;

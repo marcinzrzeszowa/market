@@ -1,16 +1,16 @@
-package com.mj.market.config;
+package com.mj.market.app.config;
 
 import com.mj.market.app.article.Article;
 import com.mj.market.app.article.ArticleService;
-import com.mj.market.app.pricealert.PriceAlert;
-import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
 import com.mj.market.app.symbol.SymbolService;
 import com.mj.market.app.symbol.SymbolType;
-
 import com.mj.market.app.user.Role;
 import com.mj.market.app.user.User;
 import com.mj.market.app.user.UserService;
+import com.mj.market.app.pricealert.PriceAlert;
+import com.mj.market.app.pricealert.PriceAlertService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,11 +24,11 @@ import java.util.Arrays;
 @AllArgsConstructor
 class StartupData implements CommandLineRunner {
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final ArticleService articleService;
-    private final SymbolService symbolService;
-    private final PriceAlertService priceAlertService;
+    private  UserService userService;
+    private  PasswordEncoder passwordEncoder;
+    private  ArticleService articleService;
+    private  SymbolService symbolService;
+    private  PriceAlertService priceAlertService;
 
     @Override
     public void run(String... args) throws Exception {

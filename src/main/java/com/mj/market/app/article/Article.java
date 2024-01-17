@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-@Entity
+@Entity(name="Article")
 @Table(name = "article")
 public class Article implements Comparable{
 

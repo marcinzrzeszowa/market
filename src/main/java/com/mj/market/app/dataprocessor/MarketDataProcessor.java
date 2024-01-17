@@ -2,9 +2,8 @@ package com.mj.market.app.dataprocessor;
 
 
 import com.mj.market.app.market.dto.SimpleResponseDto;
-import com.mj.market.app.pricealert.PriceAlert;
-import com.mj.market.app.pricealert.PriceAlertService;
 import com.mj.market.app.symbol.Symbol;
+import com.mj.market.app.pricealert.PriceAlert;
 
 import java.math.BigDecimal;
 import java.util.*;
